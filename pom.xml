@@ -140,7 +140,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.project.testing_platform/com.project.app.HelloApplication
+                            <mainClass>com.project.testing_platform/com.project.app.AppLauncher
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

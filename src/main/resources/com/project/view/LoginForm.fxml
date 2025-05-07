@@ -10,16 +10,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="475.0" prefWidth="840.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.LoggedInController">
+<AnchorPane fx:id="root" prefHeight="475.0" prefWidth="840.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.LoginFormController">
     <children>
         <AnchorPane layoutY="-1.0" prefHeight="438.0" prefWidth="406.0">
             <children>
-                <TextField fx:id="txtUserName" layoutX="45.0" layoutY="117.0" prefHeight="38.0" prefWidth="292.0" promptText="UserName" style="-fx-background-color: black;">
+                <TextField fx:id="txtUserName" layoutX="45.0" layoutY="117.0" prefHeight="38.0" prefWidth="292.0" promptText="UserName" style="-fx-background-color: green;">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </TextField>
-                <PasswordField fx:id="txtPassword" layoutX="45.0" layoutY="179.0" prefHeight="38.0" prefWidth="292.0" promptText="Password" style="-fx-background-color: black;">
+                <PasswordField fx:id="txtPassword" layoutX="45.0" layoutY="179.0" prefHeight="38.0" prefWidth="292.0" promptText="Password" style="-fx-background-color: green;">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -50,13 +50,9 @@
         </AnchorPane>
         <ImageView fitHeight="323.0" fitWidth="345.0" layoutX="407.0" layoutY="74.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@/assets/loginImage.jpg" />
+                <Image url="@../../../assets/loginImage.jpg" />
             </image>
         </ImageView>
-      <ImageView fitHeight="456.0" fitWidth="466.0" layoutX="372.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../assets/loginImage.jpg" />
-         </image>
-      </ImageView>
+
     </children>
 </AnchorPane>

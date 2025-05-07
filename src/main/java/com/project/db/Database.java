@@ -11,6 +11,7 @@ public class Database {
 
     private static Connection connection;
 
+
     private Database() {}
 
     public static Connection getConnection() throws SQLException {
@@ -19,6 +20,7 @@ public class Database {
         }
         return connection;
     }
+
 
     public static void closeConnection() {
         try {
