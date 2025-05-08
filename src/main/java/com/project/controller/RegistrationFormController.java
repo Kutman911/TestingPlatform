@@ -23,23 +23,22 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class RegistrationFormController {
-    public TextField txtFullName; // Changed from txtfullName for convention
-    public TextField txtEmail;    // Changed from txtMobile, assuming it's for email
+    public TextField txtFullName;
+    public TextField txtEmail;
     public PasswordField txtPassword;
     public PasswordField txtConfirmPassword;
     public AnchorPane pane;
     public Label lblPasswordError;
     public Label lblpassword1;
     public Label lblpassword2;
-    // Combined password error labels
 
-    // Basic email validation regex
+
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
 
     public void initialize() {
         lblPasswordError.setVisible(false);
-        // Consider adding prompt text directly in FXML for better maintainability
+
         txtFullName.setPromptText("Full Name or Username");
         txtEmail.setPromptText("Email Address");
         txtPassword.setPromptText("Password");
@@ -53,7 +52,7 @@ public class RegistrationFormController {
         registerUser();
     }
 
-    // Optional: Allow registration by pressing Enter in the confirm password field
+
     public void txtConfirmPasswordOnAction(ActionEvent actionEvent) {
         registerUser();
     }
@@ -84,10 +83,9 @@ public class RegistrationFormController {
             return;
         } else {
             lblPasswordError.setVisible(false);
-            setBorderColor("transparent"); // Or your default/valid color
+            setBorderColor("transparent");
         }
 
-        // Password strength (optional but recommended)
         if (password.length() < 8) { // Example: Minimum 8 characters
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Password must be at least 8 characters long.");
             txtPassword.requestFocus();
@@ -96,16 +94,16 @@ public class RegistrationFormController {
 
 
         try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users(username, email, password) VALUES (?, ?, ?)")) {
-            // In a real application, HASH THE PASSWORD before storing it!
-            // Example using a placeholder hashing function (replace with a strong one like BCrypt)
-            // String hashedPassword = hashPassword(password);
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users(username, email, password, role) VALUES (?, ?, ?, ?)")) {
 
-            preparedStatement.setString(1, fullName); // Assuming fullName is used as username
+            preparedStatement.setString(1, fullName);
             preparedStatement.setString(2, email);
-            preparedStatement.setString(3, password); // Store HASHED password here
+            preparedStatement.setString(3, password);
+            preparedStatement.setString(4, "STUDENT");
 
             int i = preparedStatement.executeUpdate();
+
+
 
             if (i > 0) {
                 showAlert(Alert.AlertType.INFORMATION, "Registration Success", "User registered successfully! Please login.");
@@ -137,9 +135,9 @@ public class RegistrationFormController {
     }
 
     private void setBorderColor(String color) {
-        String style = "-fx-border-color: " + color + "; -fx-border-width: 1px;"; // Added border width for visibility
+        String style = "-fx-border-color: " + color + "; -fx-border-width: 1px;";
         if ("transparent".equals(color)) {
-            style = ""; // Or your default style for no border
+            style = "";
         }
         txtPassword.setStyle(style);
         txtConfirmPassword.setStyle(style);

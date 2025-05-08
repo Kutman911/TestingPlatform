@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="pane" prefHeight="514.0" prefWidth="462.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.RegistrationFormController">
     <children>
-        <TextField fx:id="txtfullName" layoutX="60.0" layoutY="147.0" prefHeight="38.0" prefWidth="292.0" promptText="UserName" style="-fx-background-color: black;">
+        <TextField fx:id="txtFullName" layoutX="60.0" layoutY="147.0" prefHeight="38.0" prefWidth="292.0" promptText="UserName" style="-fx-background-color: black;">
             <font>
                 <Font size="16.0" />
             </font>
@@ -44,5 +44,8 @@
         </PasswordField>
         <Label fx:id="lblpassword1" layoutX="224.0" layoutY="307.0" text="Password do not match" textFill="#a90000" />
         <Label fx:id="lblpassword2" layoutX="224.0" layoutY="372.0" text="Password do not match" textFill="#a90000" />
+        <Label fx:id="lblPasswordError" layoutX="60.0" layoutY="380.0" text="Passwords do not match!" textFill="#a90000" visible="false"><font>
+        <Font size="14.0"/> </font> </Label>
+
     </children>
 </AnchorPane>
