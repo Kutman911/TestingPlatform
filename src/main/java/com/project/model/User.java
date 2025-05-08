@@ -1,7 +1,8 @@
 package com.project.model;
 
+import javafx.scene.control.MenuItem;
+
 import java.util.List;
-import javafx.scene.control.MenuItem; // For potential UI generation later
 
 public abstract class User {
     protected int id;

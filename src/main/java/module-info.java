@@ -11,6 +11,7 @@ module com.project.testing_platform {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires java.desktop;
 
     opens com.project.app to javafx.fxml;
     exports com.project.app;
