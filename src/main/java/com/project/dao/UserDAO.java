@@ -22,9 +22,10 @@ public interface UserDAO {
      * Assumes the user object (especially password) is ready for DB (e.g., password hashed).
      *
      * @param user the User object to save (can be Student, Teacher, etc.)
+     * @return
      * @throws SQLException if a database access error occurs
      */
-    void save(User user) throws SQLException; // Could also return the saved User with ID
+    boolean save(User user) throws SQLException; // Could also return the saved User with ID
 
     /**
      * Finds a user by their ID.

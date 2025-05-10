@@ -43,7 +43,7 @@ public class UserDaoImpl implements UserDAO {
     }
 
     @Override
-    public void save(User user) throws SQLException {
+    public boolean save(User user) throws SQLException { // Changed from void to boolean
         String query = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -51,9 +51,10 @@ public class UserDaoImpl implements UserDAO {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPasswordHash());
-            preparedStatement.setString(4, user.getClass().getSimpleName().toUpperCase());
+            // Use getRole() from the User object, which is set by subclasses
+            preparedStatement.setString(4, user.getRole().toUpperCase());
 
-            preparedStatement.executeUpdate();
+            return preparedStatement.executeUpdate() > 0; // Return true if successful
         } catch (SQLException e) {
             System.err.println("Error occurred while saving the user: " + e.getMessage());
             throw e;

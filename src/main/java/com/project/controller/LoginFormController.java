@@ -1,6 +1,9 @@
 package com.project.controller;
 
-import com.project.db.Database;
+import com.project.dao.UserDAO; // Interface
+import com.project.dao.UserDaoImpl; // Implementation
+import com.project.model.User; // Abstract User model
+import com.project.util.PasswordHashingService; // Your hashing service
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,70 +13,67 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class LoginFormController {
     public TextField txtUserName;
     public PasswordField txtPassword;
     public AnchorPane root;
 
+    private UserDAO userDao; // DAO instance
+
+    public void initialize() { // Called when FXML is loaded
+        userDao = new UserDaoImpl(); // Initialize the DAO
+    }
+
     public void btnSignIn(ActionEvent actionEvent) {
         String username = txtUserName.getText();
-        String password = txtPassword.getText();
+        String plainPassword = txtPassword.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty() || plainPassword.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Username and Password cannot be empty.");
             return;
         }
 
+        try {
+            Optional<User> userOptional = userDao.findByUsername(username);
 
-        String sql = "SELECT role FROM users WHERE username = ? AND password = ?";
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                // Now compare the hashed password
+                if (PasswordHashingService.comparePasswords(user.getPasswordHash(), plainPassword)) {
+                    // Successful login - Load Main Form
+                    FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/com/project/view/MainForm.fxml")));
+                    Parent mainFormRoot = loader.load();
 
+                    MainFormController mainFormController = loader.getController();
+                    mainFormController.initializeUser(user); // Pass the whole User object
 
-        try (Connection connection = Database.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password); // This should be a hashed password comparison in production
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                String userRole = resultSet.getString("role");
-
-                if (userRole == null || userRole.trim().isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, "Login Failed", "User role not defined. Please contact administrator.");
-                    return;
+                    Scene scene = new Scene(mainFormRoot);
+                    Stage primaryStage = (Stage) root.getScene().getWindow();
+                    primaryStage.setScene(scene);
+                    primaryStage.setTitle(user.getDashboardTitle()); // Use method from User object
+                    primaryStage.centerOnScreen();
+                } else {
+                    // Password does not match
+                    showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password.");
+                    txtPassword.clear();
+                    txtPassword.requestFocus();
                 }
-
-
-                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/com/project/view/MainForm.fxml")));
-                Parent mainFormRoot = loader.load();
-
-
-                MainFormController mainFormController = loader.getController();
-                mainFormController.initializeUser(username, userRole);
-
-                Scene scene = new Scene(mainFormRoot);
-                Stage primaryStage = (Stage) root.getScene().getWindow();
-                primaryStage.setScene(scene);
-                primaryStage.setTitle("Main Dashboard - " + userRole); // Dynamic title
-                primaryStage.centerOnScreen();
-
             } else {
-                showAlert(Alert.AlertType.ERROR, "Login Failed", "Username or Password Do not Match.");
+                // Username not found
+                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password.");
                 txtUserName.clear();
                 txtPassword.clear();
                 txtUserName.requestFocus();
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Database Error", "Could not connect to the database or query failed: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Database query failed: " + e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Loading Error", "Could not load the main form: " + e.getMessage());
@@ -82,10 +82,10 @@ public class LoginFormController {
             showAlert(Alert.AlertType.ERROR, "Resource Error", "Could not find MainForm.fxml. Check the path.");
         }
     }
-
-    public void btnSignup(ActionEvent actionEvent) throws IOException {
+    // ... (btnSignup and showAlert methods remain the same)
+    public void btnSignup(ActionEvent actionEvent) {
         try {
-            Parent parent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/project/view/RegistrationForm.fxml"))); // Adjust path
+            Parent parent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/project/view/RegistrationForm.fxml")));
             Scene scene = new Scene(parent);
             Stage primaryStage = (Stage) root.getScene().getWindow();
             primaryStage.setScene(scene);
@@ -96,7 +96,7 @@ public class LoginFormController {
             showAlert(Alert.AlertType.ERROR, "Loading Error", "Could not load the registration form: " + e.getMessage());
         } catch (NullPointerException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Resource Error", "Could not find FXML file. Check the path.");
+            showAlert(Alert.AlertType.ERROR, "Resource Error", "Could not find RegistrationForm.fxml. Check the path.");
         }
     }
 

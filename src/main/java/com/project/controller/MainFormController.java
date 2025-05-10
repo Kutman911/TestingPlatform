@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.model.User; // Abstract User model
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public class MainFormController {
@@ -30,106 +32,109 @@ public class MainFormController {
     @FXML
     private Label statusLabel;
 
-    private String currentUsername;
-    private String currentUserRole;
+    private User loggedInUser; // Store the full User object
 
     public void initialize() {
-        // This method is called after all @FXML annotated members have been injected
         statusLabel.setText("Status: Initializing...");
     }
 
-    public void initializeUser(String username, String role) {
-        this.currentUsername = username;
-        this.currentUserRole = role;
+    // Changed to accept User object
+    public void initializeUser(User user) {
+        this.loggedInUser = user;
 
-        welcomeLabel.setText("Welcome, " + username + "!");
-        roleLabel.setText("Your Role: " + role);
-        statusLabel.setText("Status: Logged in as " + role);
+        if (loggedInUser == null) {
+            // Handle error: no user passed or user is null
+            showAlert(Alert.AlertType.ERROR, "Initialization Error", "User data not available. Logging out.");
+            handleLogout(null); // Pass null or create a dummy ActionEvent
+            return;
+        }
+
+        welcomeLabel.setText("Welcome, " + loggedInUser.getUsername() + "!");
+        roleLabel.setText("Your Role: " + loggedInUser.getRole());
+        statusLabel.setText("Status: Logged in as " + loggedInUser.getRole());
+
+        // Clear existing dynamic menus before adding new ones (if any were there)
+        menuBar.getMenus().removeIf(menu -> menu.getId() != null && menu.getId().startsWith("roleSpecificMenu_"));
 
         setupMenusBasedOnRole();
     }
 
     private void setupMenusBasedOnRole() {
-        // Clear any existing role-specific menus if this method were to be called multiple times
-        // For now, we assume it's called once.
+        if (loggedInUser == null) return;
 
-        // Student Menu
-        if ("STUDENT".equalsIgnoreCase(currentUserRole)) {
-            Menu studentMenu = new Menu("Student");
-            MenuItem viewAvailableTests = new MenuItem("View Available Tests");
-            viewAvailableTests.setOnAction(e -> loadView("/com/project/view/student/AvailableTestsView.fxml", "Available Tests"));
-            MenuItem viewMyResults = new MenuItem("View My Results");
-            viewMyResults.setOnAction(e -> loadView("/com/project/view/student/MyResultsView.fxml", "My Results"));
-            studentMenu.getItems().addAll(viewAvailableTests, viewMyResults);
-            menuBar.getMenus().add(studentMenu);
-        }
+        // Get role-specific menu items from the User object itself
+        List<MenuItem> roleMenuItems = loggedInUser.getRoleSpecificMenuItems();
 
-        // Teacher Menu
-        if ("TEACHER".equalsIgnoreCase(currentUserRole)) {
-            Menu teacherMenu = new Menu("Teacher");
-            MenuItem createTest = new MenuItem("Create/Manage Tests");
-            createTest.setOnAction(e -> loadView("/com/project/view/teacher/ManageTestsView.fxml", "Manage Tests"));
-            MenuItem manageQuestions = new MenuItem("Manage Questions");
-            manageQuestions.setOnAction(e -> loadView("/com/project/view/teacher/ManageQuestionsView.fxml", "Manage Questions"));
-            MenuItem viewSubmissions = new MenuItem("View Student Submissions");
-            viewSubmissions.setOnAction(e -> loadView("/com/project/view/teacher/ViewSubmissionsView.fxml", "Submissions"));
-            teacherMenu.getItems().addAll(createTest, manageQuestions, viewSubmissions);
-            menuBar.getMenus().add(teacherMenu);
-        }
+        if (!roleMenuItems.isEmpty()) {
+            Menu roleSpecificMenu = new Menu(loggedInUser.getRole()); // Menu title, e.g., "STUDENT"
+            roleSpecificMenu.setId("roleSpecificMenu_" + loggedInUser.getRole()); // For potential removal later
+            roleSpecificMenu.getItems().addAll(roleMenuItems);
 
-        // Admin Menu
-        if ("ADMIN".equalsIgnoreCase(currentUserRole)) {
-            Menu adminMenu = new Menu("Administrator");
-            MenuItem manageUsers = new MenuItem("Manage Users");
-            manageUsers.setOnAction(e -> loadView("/com/project/view/admin/ManageUsersView.fxml", "Manage Users"));
-            MenuItem systemSettings = new MenuItem("System Settings"); // Example
-            systemSettings.setOnAction(e -> System.out.println("Admin: System Settings clicked"));
-            MenuItem viewAuditLogs = new MenuItem("View Audit Logs"); // Example
-            viewAuditLogs.setOnAction(e -> System.out.println("Admin: View Audit Logs clicked"));
+            // Customize action handlers for these menu items to load views
+            // For example, if the MenuItem's action was set to call a method in MainFormController
+            for (MenuItem item : roleMenuItems) {
+                String viewPath = ""; // Determine this based on item text or stored data in MenuItem
+                String viewTitle = item.getText();
 
-            adminMenu.getItems().addAll(manageUsers, systemSettings, viewAuditLogs);
-            menuBar.getMenus().add(adminMenu);
-        }
+                if (item.getText().equals("View Available Tests")) {
+                    viewPath = "/com/project/view/student/AvailableTestsView.fxml";
+                } else if (item.getText().equals("View My Results")) {
+                    viewPath = "/com/project/view/student/MyResultsView.fxml";
+                } else if (item.getText().equals("Create/Manage Tests")) {
+                    viewPath = "/com/project/view/teacher/ManageTestsView.fxml";
+                } else if (item.getText().equals("Manage Questions")) {
+                    viewPath = "/com/project/view/teacher/ManageQuestionsView.fxml";
+                } else if (item.getText().equals("Manage Users")) {
+                    viewPath = "/com/project/view/admin/ManageUsersView.fxml";
+                }
+                // ... add other mappings ...
 
-        // Course Manager Menu
-        if ("MANAGER".equalsIgnoreCase(currentUserRole)) {
-            Menu managerMenu = new Menu("Course Manager");
-            MenuItem manageCourses = new MenuItem("Manage Courses");
-            manageCourses.setOnAction(e -> loadView("/com/project/view/manager/ManageCoursesView.fxml", "Manage Courses"));
-            MenuItem assignTestsToCourses = new MenuItem("Assign Tests to Courses");
-            assignTestsToCourses.setOnAction(e -> System.out.println("Manager: Assign Tests clicked"));
-            MenuItem viewCourseAnalytics = new MenuItem("View Course Analytics");
-            viewCourseAnalytics.setOnAction(e -> System.out.println("Manager: Course Analytics clicked"));
-            managerMenu.getItems().addAll(manageCourses, assignTestsToCourses, viewCourseAnalytics);
-            menuBar.getMenus().add(managerMenu);
+                // Re-assign or wrap the action to use loadView
+                // This assumes the MenuItems from User subclasses are simple stubs for now
+                // A more robust way is for User.getRoleSpecificMenuItems() to return MenuConfig objects
+                // that include the FXML path and title.
+
+                String finalViewPath = viewPath; // Effectively final for lambda
+                if (!finalViewPath.isEmpty()) {
+                    item.setOnAction(e -> loadView(finalViewPath, viewTitle));
+                } else {
+                    // Keep the System.out.println if no path defined, or disable
+                    // item.setOnAction(e -> System.out.println("Action for " + viewTitle + " not fully configured."));
+                }
+            }
+            menuBar.getMenus().add(roleSpecificMenu);
         }
     }
 
     @FXML
     private void handleUserProfile(ActionEvent event) {
-        // For now, just show an alert. Later, this can load a user profile view.
-        showAlert(Alert.AlertType.INFORMATION, "User Profile", "Username: " + currentUsername + "\nRole: " + currentUserRole);
+        if (loggedInUser == null) return;
+        showAlert(Alert.AlertType.INFORMATION, "User Profile",
+                "Username: " + loggedInUser.getUsername() +
+                        "\nEmail: " + loggedInUser.getEmail() +
+                        "\nRole: " + loggedInUser.getRole());
         // loadView("/com/project/view/common/UserProfileView.fxml", "User Profile");
     }
 
-
     @FXML
     private void handleLogout(ActionEvent event) {
+        loggedInUser = null; // Clear user session
         try {
-            currentUsername = null;
-            currentUserRole = null;
-
             Parent loginRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/project/view/LoginForm.fxml")));
             Scene scene = new Scene(loginRoot);
-            Stage primaryStage = (Stage) menuBar.getScene().getWindow(); // or mainPane.getScene().getWindow()
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("Online Testing Platform - Login");
-            primaryStage.centerOnScreen();
+            Stage primaryStage = (Stage) (menuBar != null ? menuBar.getScene().getWindow() : mainPane.getScene().getWindow());
+            if (primaryStage != null) {
+                primaryStage.setScene(scene);
+                primaryStage.setTitle("Online Testing Platform - Login");
+                primaryStage.centerOnScreen();
+            }
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Logout Error", "Could not load the login screen: " + e.getMessage());
         }
     }
+    // ... (handleExit, loadView, showAlert methods remain mostly the same)
+    // The loadView method will now be more important.
 
     @FXML
     private void handleExit(ActionEvent event) {
@@ -137,22 +142,43 @@ public class MainFormController {
         stage.close();
     }
 
-    // Helper method to load different views into the center of the BorderPane
     private void loadView(String fxmlPath, String viewTitle) {
         try {
+            if (fxmlPath == null || fxmlPath.trim().isEmpty()) {
+                System.out.println("View path is empty for: " + viewTitle);
+                VBox placeholderView = new VBox(new Label(viewTitle + " - View Path Not Configured"));
+                placeholderView.setAlignment(javafx.geometry.Pos.CENTER);
+                mainPane.setCenter(placeholderView);
+                return;
+            }
 
-            VBox placeholderView = new VBox(new Label(viewTitle + " - View (Not Implemented Yet)"));
-            placeholderView.setAlignment(javafx.geometry.Pos.CENTER);
-            placeholderView.setStyle("-fx-padding: 20;");
-            mainPane.setCenter(placeholderView);
+            // For actual loading:
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent viewRoot = loader.load();
+            mainPane.setCenter(viewRoot);
             statusLabel.setText("Status: Viewing " + viewTitle);
 
-            System.out.println("Attempting to load: " + fxmlPath); // For debugging
+            // Example of initializing controller if it needs the loggedInUser:
+            // Object controller = loader.getController();
+            // if (controller instanceof NeedsUser) { // Define an interface NeedsUser { void setUser(User user); }
+            //    ((NeedsUser) controller).setUser(loggedInUser);
+            // }
 
-        } catch (/*IO*/Exception e) { // Catch broader exception for now
+
+        } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Loading Error", "Could not load view: " + fxmlPath + "\n" + e.getMessage());
             statusLabel.setText("Status: Error loading " + viewTitle);
+            VBox errorView = new VBox(new Label("Error loading: " + viewTitle));
+            errorView.setAlignment(javafx.geometry.Pos.CENTER);
+            mainPane.setCenter(errorView);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Loading Error", "FXML file not found: " + fxmlPath);
+            statusLabel.setText("Status: Error FXML not found for " + viewTitle);
+            VBox errorView = new VBox(new Label("FXML not found: " + viewTitle));
+            errorView.setAlignment(javafx.geometry.Pos.CENTER);
+            mainPane.setCenter(errorView);
         }
     }
 
