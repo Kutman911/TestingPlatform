@@ -62,47 +62,48 @@ public class MainFormController {
     private void setupMenusBasedOnRole() {
         if (loggedInUser == null) return;
 
-        // Get role-specific menu items from the User object itself
         List<MenuItem> roleMenuItems = loggedInUser.getRoleSpecificMenuItems();
 
         if (!roleMenuItems.isEmpty()) {
-            Menu roleSpecificMenu = new Menu(loggedInUser.getRole()); // Menu title, e.g., "STUDENT"
-            roleSpecificMenu.setId("roleSpecificMenu_" + loggedInUser.getRole()); // For potential removal later
+            Menu roleSpecificMenu = new Menu(loggedInUser.getRole());
+            roleSpecificMenu.setId("roleSpecificMenu_" + loggedInUser.getRole());
             roleSpecificMenu.getItems().addAll(roleMenuItems);
 
-            // Customize action handlers for these menu items to load views
-            // For example, if the MenuItem's action was set to call a method in MainFormController
+
             for (MenuItem item : roleMenuItems) {
-                String viewPath = ""; // Determine this based on item text or stored data in MenuItem
+                String viewPath = "";
                 String viewTitle = item.getText();
 
-                if (item.getText().equals("View Available Tests")) {
-                    viewPath = "/com/project/view/student/AvailableTestsView.fxml";
-                } else if (item.getText().equals("View My Results")) {
-                    viewPath = "/com/project/view/student/MyResultsView.fxml";
-                } else if (item.getText().equals("Create/Manage Tests")) {
-                    viewPath = "/com/project/view/teacher/ManageTestsView.fxml";
-                } else if (item.getText().equals("Manage Questions")) {
-                    viewPath = "/com/project/view/teacher/ManageQuestionsView.fxml";
-                } else if (item.getText().equals("Manage Users")) {
-                    viewPath = "/com/project/view/admin/ManageUsersView.fxml";
-                }
-                // ... add other mappings ...
 
-                // Re-assign or wrap the action to use loadView
-                // This assumes the MenuItems from User subclasses are simple stubs for now
-                // A more robust way is for User.getRoleSpecificMenuItems() to return MenuConfig objects
-                // that include the FXML path and title.
-
-                String finalViewPath = viewPath; // Effectively final for lambda
+                String finalViewPath = viewPath;
                 if (!finalViewPath.isEmpty()) {
                     item.setOnAction(e -> loadView(finalViewPath, viewTitle));
-                } else {
-                    // Keep the System.out.println if no path defined, or disable
-                    // item.setOnAction(e -> System.out.println("Action for " + viewTitle + " not fully configured."));
                 }
             }
-            menuBar.getMenus().add(roleSpecificMenu);
+
+
+            if ("ADMIN".equalsIgnoreCase(loggedInUser.getRole())) {
+                Menu adminMenu = new Menu("Administrator");
+                adminMenu.setId("roleSpecificMenu_ADMIN");
+
+                List<MenuItem> adminItems = loggedInUser.getRoleSpecificMenuItems();
+
+                for (MenuItem item : adminItems) {
+                    if (item.getText().equals("Manage Users")) {
+                        item.setOnAction(e -> loadView("/com/project/view/admin/ManageUsersView.fxml", "Manage Users"));
+                    } else if (item.getText().equals("System Settings")) {
+                        item.setOnAction(e -> {
+                            System.out.println("Admin: System Settings clicked (Not Implemented View)");
+                            loadView(null, "System Settings");
+                        });
+                    }
+                    adminMenu.getItems().add(item);
+                }
+                menuBar.getMenus().add(adminMenu); // Добавляем меню администратора
+            }
+            ///// КОНЕЦ ВСТАВКИ /////
+
+            menuBar.getMenus().add(roleSpecificMenu); // Общее меню для других ролей
         }
     }
 

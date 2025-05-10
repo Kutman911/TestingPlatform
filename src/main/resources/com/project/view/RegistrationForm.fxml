@@ -10,12 +10,12 @@
 
 <AnchorPane fx:id="pane" prefHeight="514.0" prefWidth="462.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.RegistrationFormController">
     <children>
-        <TextField fx:id="txtFullName" layoutX="60.0" layoutY="147.0" prefHeight="38.0" prefWidth="292.0" promptText="UserName" style="-fx-background-color: black;">
+        <TextField fx:id="txtFullName" layoutX="60.0" layoutY="147.0" prefHeight="38.0" prefWidth="292.0" promptText="UserName" style="-fx-background-color: green;">
             <font>
                 <Font size="16.0" />
             </font>
         </TextField>
-        <PasswordField fx:id="txtPassword" layoutX="60.0" layoutY="269.0" prefHeight="38.0" prefWidth="292.0" promptText="Password" style="-fx-background-color: black;">
+        <PasswordField fx:id="txtPassword" layoutX="60.0" layoutY="269.0" prefHeight="38.0" prefWidth="292.0" promptText="Password" style="-fx-background-color: green;">
             <font>
                 <Font size="16.0" />
             </font>
@@ -32,7 +32,7 @@
             </font>
         </Button>
         <Separator layoutX="29.0" layoutY="400.0" prefHeight="7.0" prefWidth="390.0" />
-        <TextField fx:id="txtEmail" layoutX="60.0" layoutY="207.0" prefHeight="38.0" prefWidth="292.0" promptText="Email" style="-fx-background-color: black;">
+        <TextField fx:id="txtEmail" layoutX="60.0" layoutY="207.0" prefHeight="38.0" prefWidth="292.0" promptText="Email" style="-fx-background-color: green;">
             <font>
                 <Font size="16.0" />
             </font>

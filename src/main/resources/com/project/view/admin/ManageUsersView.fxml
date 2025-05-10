@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.admin.ManageUsersController">
+    <top>
+        <Label text="Manage Users" BorderPane.alignment="CENTER">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
+    <center>
+        <TableView fx:id="usersTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
+                <TableColumn fx:id="usernameColumn" prefWidth="150.0" text="Username" />
+                <TableColumn fx:id="emailColumn" prefWidth="200.0" text="Email" />
+                <TableColumn fx:id="roleColumn" prefWidth="100.0" text="Role" />
+            </columns>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="0.0" />
+            </BorderPane.margin>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefreshUsers" text="Refresh" />
+                <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#handleAddUser" style="-fx-background-color: #4CAF50;" text="Add User" textFill="WHITE" />
+                <Button fx:id="editUserButton" mnemonicParsing="false" onAction="#handleEditUser" style="-fx-background-color: #2196F3;" text="Edit Selected" textFill="WHITE" />
+                <Button fx:id="deleteUserButton" mnemonicParsing="false" onAction="#handleDeleteUser" style="-fx-background-color: #f44336;" text="Delete Selected" textFill="WHITE" />
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
+            <padding>
+                <Insets bottom="5.0" top="5.0" />
+            </padding>
+        </HBox>
+    </bottom>
+</BorderPane>
