@@ -1,20 +1,28 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.project.controller.teacher.ManageTestsController">
-    <center>
-        <Label text="(Not Implemented Yet)">
-            <font>
-                <Font name="System Bold" size="18.0"/>
-            </font>
-        </Label>
-    </center>
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="10"
+      fx:controller="com.project.controller.teacher.ManageTestsController">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
-</BorderPane>
+    <Label text="Управление тестами" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <TableView fx:id="tableTests" prefHeight="200.0">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+            <TableColumn fx:id="colTitle" text="Название" prefWidth="200" />
+            <TableColumn fx:id="colDuration" text="Длительность" prefWidth="100" />
+            <TableColumn fx:id="colPublished" text="Опубликован" prefWidth="100" />
+        </columns>
+    </TableView>
+    <HBox spacing="5">
+        <TextField fx:id="txtTitle" promptText="Название теста" />
+        <TextField fx:id="txtDuration" promptText="Длительность (мин)" />
+        <CheckBox fx:id="chkPublished" text="Опубликован" />
+        <Button fx:id="btnAddTest" text="Добавить" onAction="#addTest" />
+        <Button fx:id="btnDeleteTest" text="Удалить" onAction="#deleteTest" />
+    </HBox>
+</VBox>

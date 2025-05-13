@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.project.controller.manager.ManageCoursesController">
-    <center>
-        <Label text="Available Tests View (Not Implemented Yet)">
+<BorderPane prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.manager.ManageCoursesController">
+    <top>
+        <Label text="Manage Courses" BorderPane.alignment="CENTER">
             <font>
-                <Font name="System Bold" size="18.0"/>
+                <Font name="System Bold" size="24.0" />
             </font>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
         </Label>
+    </top>
+    <center>
+        <TableView fx:id="coursesTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="70.0" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="250.0" text="Course Name" />
+                <TableColumn fx:id="descriptionColumn" prefWidth="350.0" text="Description" />
+            </columns>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="0.0" />
+            </BorderPane.margin>
+        </TableView>
     </center>
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefreshCourses" text="Refresh" />
+                <Button fx:id="addCourseButton" mnemonicParsing="false" onAction="#handleAddCourse" style="-fx-background-color: #4CAF50;" text="Add Course" textFill="WHITE" />
+                <Button fx:id="editCourseButton" mnemonicParsing="false" onAction="#handleEditCourse" style="-fx-background-color: #2196F3;" text="Edit Selected" textFill="WHITE" />
+                <Button fx:id="deleteCourseButton" mnemonicParsing="false" onAction="#handleDeleteCourse" style="-fx-background-color: #f44336;" text="Delete Selected" textFill="WHITE" />
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
+            <padding>
+                <Insets bottom="5.0" top="5.0" />
+            </padding>
+        </HBox>
+    </bottom>
 </BorderPane>

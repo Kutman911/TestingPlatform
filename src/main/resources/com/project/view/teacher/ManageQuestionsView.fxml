@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.project.controller.teacher.ManageQuestionsController">
-    <center>
-        <Label text="(Not Implemented Yet)">
-            <font>
-                <Font name="System Bold" size="18.0"/>
-            </font>
-        </Label>
-    </center>
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="10"
+      fx:controller="com.project.controller.teacher.ManageQuestionsController">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
-</BorderPane>
+    <Label text="Управление вопросами" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <HBox spacing="5">
+        <Label text="Выберите тест:"/>
+        <ComboBox fx:id="comboTests" prefWidth="200" />
+    </HBox>
+    <TableView fx:id="tableQuestions" prefHeight="200.0">
+        <columns>
+            <TableColumn fx:id="colQId" text="ID" prefWidth="50" />
+            <TableColumn fx:id="colQText" text="Текст вопроса" prefWidth="300" />
+            <TableColumn fx:id="colQType" text="Тип" prefWidth="150" />
+        </columns>
+    </TableView>
+    <HBox spacing="5">
+        <TextField fx:id="txtQuestion" promptText="Текст вопроса" />
+        <TextField fx:id="txtType" promptText="Тип вопроса" />
+        <Button fx:id="btnAddQuestion" text="Добавить" onAction="#addQuestion" />
+        <Button fx:id="btnDeleteQuestion" text="Удалить" onAction="#deleteQuestion" />
+    </HBox>
+</VBox>

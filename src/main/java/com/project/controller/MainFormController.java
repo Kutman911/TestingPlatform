@@ -114,14 +114,14 @@ public class MainFormController {
                         break;
                     case "MANAGER":
                         if (viewTitle.equals("Manage Courses")) {
-                            // viewPath = "/com/project/view/manager/ManageCoursesView.fxml";
-                            System.out.println("Менеджер: FXML для 'Manage Courses' еще не создан.");
+                            viewPath = "/com/project/view/manager/ManageCoursesView.fxml"; // Указываем путь
                         } else if (viewTitle.equals("Assign Tests to Courses")) {
+                            // viewPath = "/com/project/view/manager/AssignTestsView.fxml";
                             System.out.println("Менеджер: FXML для 'Assign Tests to Courses' еще не создан.");
                         } else if (viewTitle.equals("View Course Analytics")) {
+                            // viewPath = "/com/project/view/manager/ViewCourseAnalytics.fxml";
                             System.out.println("Менеджер: FXML для 'View Course Analytics' еще не создан.");
                         }
-
                         break;
                     default:
                         System.err.println("Неизвестная роль при настройке меню: " + loggedInUser.getRole());
