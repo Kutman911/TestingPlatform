@@ -20,7 +20,7 @@ public class Admin extends User {
         List<MenuItem> items = new ArrayList<>();
         MenuItem manageUsers = new MenuItem("Manage Users");
         manageUsers.setOnAction(e -> System.out.println("Admin: Navigating to Manage Users..."));
-        // This would eventually call a method to load the ManageUsersView.fxml
+
 
         MenuItem systemSettings = new MenuItem("System Settings");
         systemSettings.setOnAction(e -> System.out.println("Admin: Navigating to System Settings..."));

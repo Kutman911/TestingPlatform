@@ -44,19 +44,19 @@ public class LoginFormController {
 
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-                // Now compare the hashed password
+
                 if (PasswordHashingService.comparePasswords(user.getPasswordHash(), plainPassword)) {
-                    // Successful login - Load Main Form
+
                     FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/com/project/view/MainForm.fxml")));
                     Parent mainFormRoot = loader.load();
 
                     MainFormController mainFormController = loader.getController();
-                    mainFormController.initializeUser(user); // Pass the whole User object
+                    mainFormController.initializeUser(user);
 
                     Scene scene = new Scene(mainFormRoot);
                     Stage primaryStage = (Stage) root.getScene().getWindow();
                     primaryStage.setScene(scene);
-                    primaryStage.setTitle(user.getDashboardTitle()); // Use method from User object
+                    primaryStage.setTitle(user.getDashboardTitle());
                     primaryStage.centerOnScreen();
                 } else {
                     // Password does not match
@@ -82,7 +82,7 @@ public class LoginFormController {
             showAlert(Alert.AlertType.ERROR, "Resource Error", "Could not find MainForm.fxml. Check the path.");
         }
     }
-    // ... (btnSignup and showAlert methods remain the same)
+
     public void btnSignup(ActionEvent actionEvent) {
         try {
             Parent parent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/project/view/RegistrationForm.fxml")));

@@ -1,6 +1,6 @@
 package com.project.controller;
 
-import com.project.model.User; // Abstract User model
+import com.project.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +14,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import java.util.List;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,50 +63,87 @@ public class MainFormController {
     }
 
     private void setupMenusBasedOnRole() {
-        if (loggedInUser == null) return;
+        if (loggedInUser == null) {
+            System.err.println("setupMenusBasedOnRole called with null loggedInUser.");
+            return;
+        }
+
 
         List<MenuItem> roleMenuItems = loggedInUser.getRoleSpecificMenuItems();
 
         if (!roleMenuItems.isEmpty()) {
-            Menu roleSpecificMenu = new Menu(loggedInUser.getRole());
+
+            String roleNameFormatted = loggedInUser.getRole().substring(0, 1).toUpperCase() +
+                    loggedInUser.getRole().substring(1).toLowerCase();
+            Menu roleSpecificMenu = new Menu(roleNameFormatted);
             roleSpecificMenu.setId("roleSpecificMenu_" + loggedInUser.getRole());
-            roleSpecificMenu.getItems().addAll(roleMenuItems);
-
-
             for (MenuItem item : roleMenuItems) {
                 String viewPath = "";
                 String viewTitle = item.getText();
 
+                switch (loggedInUser.getRole().toUpperCase()) {
+                    case "STUDENT":
+                        if (viewTitle.equals("View Available Tests")) {
+                            viewPath = "/com/project/view/student/AvailableTestsView.fxml";
+                        } else if (viewTitle.equals("View My Results")) {
+                            viewPath = "/com/project/view/student/MyResultsView.fxml";
+                        }
 
-                String finalViewPath = viewPath;
-                if (!finalViewPath.isEmpty()) {
+                        break;
+                    case "TEACHER":
+                        if (viewTitle.equals("Create/Manage Tests")) {
+                            viewPath = "/com/project/view/teacher/ManageTestsView.fxml";
+                        } else if (viewTitle.equals("Manage Questions")) {
+                            viewPath = "/com/project/view/teacher/ManageQuestionsView.fxml";
+                        } else if (viewTitle.equals("View Student Submissions")) {
+                            viewPath = "/com/project/view/teacher/ViewSubmissionsView.fxml";
+                        }
+
+                        break;
+                    case "ADMIN":
+                        if (viewTitle.equals("Manage Users")) {
+                            viewPath = "/com/project/view/admin/ManageUsersView.fxml";
+                        } else if (viewTitle.equals("System Settings")) {
+
+                            System.out.println("Админ: FXML для 'System Settings' еще не создан.");
+                        } else if (viewTitle.equals("View Audit Logs")) {
+                            // viewPath = "/com/project/view/admin/AuditLogsView.fxml";
+                            System.out.println("Админ: FXML для 'View Audit Logs' еще не создан.");
+                        }
+
+                        break;
+                    case "MANAGER":
+                        if (viewTitle.equals("Manage Courses")) {
+                            // viewPath = "/com/project/view/manager/ManageCoursesView.fxml";
+                            System.out.println("Менеджер: FXML для 'Manage Courses' еще не создан.");
+                        } else if (viewTitle.equals("Assign Tests to Courses")) {
+                            System.out.println("Менеджер: FXML для 'Assign Tests to Courses' еще не создан.");
+                        } else if (viewTitle.equals("View Course Analytics")) {
+                            System.out.println("Менеджер: FXML для 'View Course Analytics' еще не создан.");
+                        }
+
+                        break;
+                    default:
+                        System.err.println("Неизвестная роль при настройке меню: " + loggedInUser.getRole());
+                        break;
+                }
+
+                final String finalViewPath = viewPath;
+                if (finalViewPath != null && !finalViewPath.isEmpty()) {
+
                     item.setOnAction(e -> loadView(finalViewPath, viewTitle));
+                } else {
+                    final String capturedTitle = viewTitle; // Захватываем viewTitle для лямбды
+                    item.setOnAction(e -> {
+                        System.out.println("Действие для '" + capturedTitle + "' (Роль: " + loggedInUser.getRole() + ") - FXML путь не настроен.");
+                        loadView(null, capturedTitle);
+                    });
                 }
+                roleSpecificMenu.getItems().add(item);
             }
-
-
-            if ("ADMIN".equalsIgnoreCase(loggedInUser.getRole())) {
-                Menu adminMenu = new Menu("Administrator");
-                adminMenu.setId("roleSpecificMenu_ADMIN");
-
-                List<MenuItem> adminItems = loggedInUser.getRoleSpecificMenuItems();
-
-                for (MenuItem item : adminItems) {
-                    if (item.getText().equals("Manage Users")) {
-                        item.setOnAction(e -> loadView("/com/project/view/admin/ManageUsersView.fxml", "Manage Users"));
-                    } else if (item.getText().equals("System Settings")) {
-                        item.setOnAction(e -> {
-                            System.out.println("Admin: System Settings clicked (Not Implemented View)");
-                            loadView(null, "System Settings");
-                        });
-                    }
-                    adminMenu.getItems().add(item);
-                }
-                menuBar.getMenus().add(adminMenu); // Добавляем меню администратора
-            }
-            ///// КОНЕЦ ВСТАВКИ /////
-
-            menuBar.getMenus().add(roleSpecificMenu); // Общее меню для других ролей
+            menuBar.getMenus().add(roleSpecificMenu);
+        } else if (loggedInUser != null) {
+            System.out.println("Для роли " + loggedInUser.getRole() + " не определены пункты меню в классе User.");
         }
     }
 
@@ -134,8 +174,7 @@ public class MainFormController {
             showAlert(Alert.AlertType.ERROR, "Logout Error", "Could not load the login screen: " + e.getMessage());
         }
     }
-    // ... (handleExit, loadView, showAlert methods remain mostly the same)
-    // The loadView method will now be more important.
+
 
     @FXML
     private void handleExit(ActionEvent event) {
@@ -153,7 +192,7 @@ public class MainFormController {
                 return;
             }
 
-            // For actual loading:
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent viewRoot = loader.load();
             mainPane.setCenter(viewRoot);
