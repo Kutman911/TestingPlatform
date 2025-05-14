@@ -1,6 +1,6 @@
 package com.project.controller;
 
-import com.project.dao.UserDAO; // Interface
+import com.project.dao.UserDao; // Interface
 import com.project.dao.UserDaoImpl; // Implementation
 import com.project.model.User; // Abstract User model
 import com.project.util.PasswordHashingService; // Your hashing service
@@ -24,7 +24,7 @@ public class LoginFormController {
     public PasswordField txtPassword;
     public AnchorPane root;
 
-    private UserDAO userDao; // DAO instance
+    private UserDao userDao; // DAO instance
 
     public void initialize() { // Called when FXML is loaded
         userDao = new UserDaoImpl(); // Initialize the DAO

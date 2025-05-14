@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDaoImpl implements UserDAO {
+public class UserDaoImpl implements UserDao {
 
 
     @Override

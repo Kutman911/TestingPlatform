@@ -1,28 +1,55 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" spacing="10"
-      fx:controller="com.project.controller.teacher.ManageTestsController">
-    <padding>
-        <Insets top="10" right="10" bottom="10" left="10"/>
-    </padding>
-    <Label text="Управление тестами" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-    <TableView fx:id="tableTests" prefHeight="200.0">
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="50" />
-            <TableColumn fx:id="colTitle" text="Название" prefWidth="200" />
-            <TableColumn fx:id="colDuration" text="Длительность" prefWidth="100" />
-            <TableColumn fx:id="colPublished" text="Опубликован" prefWidth="100" />
-        </columns>
-    </TableView>
-    <HBox spacing="5">
-        <TextField fx:id="txtTitle" promptText="Название теста" />
-        <TextField fx:id="txtDuration" promptText="Длительность (мин)" />
-        <CheckBox fx:id="chkPublished" text="Опубликован" />
-        <Button fx:id="btnAddTest" text="Добавить" onAction="#addTest" />
-        <Button fx:id="btnDeleteTest" text="Удалить" onAction="#deleteTest" />
-    </HBox>
-</VBox>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="550.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.teacher.ManageTestsController">
+    <top>
+        <Label text="Manage My Tests" BorderPane.alignment="CENTER">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
+    <center>
+        <TableView fx:id="testsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="testIdColumn" prefWidth="50.0" text="ID" />
+                <TableColumn fx:id="testNameColumn" prefWidth="200.0" text="Test Name" />
+                <TableColumn fx:id="courseNameColumn" prefWidth="150.0" text="Course" />
+                <TableColumn fx:id="durationColumn" prefWidth="80.0" text="Duration (min)" />
+                <TableColumn fx:id="activeColumn" prefWidth="70.0" text="Active" />
+                <TableColumn fx:id="creatorNameColumn" prefWidth="120.0" text="Creator" />
+                <TableColumn fx:id="questionsColumn" prefWidth="150.0" text="Questions" />
+            </columns>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="0.0" />
+            </BorderPane.margin>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefreshTests" text="Refresh" />
+                <Button fx:id="addTestButton" mnemonicParsing="false" onAction="#handleAddTest" style="-fx-background-color: #4CAF50;" text="Add New Test" textFill="WHITE" />
+                <Button fx:id="editTestButton" mnemonicParsing="false" onAction="#handleEditTest" style="-fx-background-color: #2196F3;" text="Edit Selected" textFill="WHITE" />
+                <Button fx:id="deleteTestButton" mnemonicParsing="false" onAction="#handleDeleteTest" style="-fx-background-color: #f44336;" text="Delete Selected" textFill="WHITE" />
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
+            <padding>
+                <Insets bottom="5.0" top="5.0" />
+            </padding>
+        </HBox>
+    </bottom>
+</BorderPane>

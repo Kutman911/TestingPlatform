@@ -1,6 +1,6 @@
 package com.project.controller.admin;
 
-import com.project.dao.UserDAO;
+import com.project.dao.UserDao;
 import com.project.dao.UserDaoImpl;
 import com.project.model.User;
 import javafx.collections.FXCollections;
@@ -43,7 +43,7 @@ public class ManageUsersController {
     @FXML
     private Button refreshButton;
 
-    private UserDAO userDao;
+    private UserDao userDao;
     private ObservableList<User> userList;
 
 
@@ -95,7 +95,7 @@ public class ManageUsersController {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/com/project/view/admin/UserEditDialog.fxml"));
-            GridPane dialogPane = loader.load(); // Используем GridPane, так как это корневой элемент UserEditDialog.fxml
+            GridPane dialogPane = loader.load();
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle(user == null ? "Add New User" : "Edit User");

@@ -1,6 +1,6 @@
 package com.project.controller;
 
-import com.project.dao.UserDAO;
+import com.project.dao.UserDao;
 
 import com.project.dao.UserDaoImpl; // Implementation
 import com.project.model.Student; // Default new user type
@@ -33,7 +33,7 @@ public class RegistrationFormController {
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
 
-    private UserDAO userDao; // DAO instance
+    private UserDao userDao; // DAO instance
 
     public void initialize() {
         lblPasswordError.setVisible(false);

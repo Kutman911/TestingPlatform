@@ -1,6 +1,6 @@
 package com.project.controller.admin;
 
-import com.project.dao.UserDAO;
+import com.project.dao.UserDao;
 import com.project.dao.UserDaoImpl;
 import com.project.model.*; // Импортируем все модели User, Student и т.д.
 import com.project.util.PasswordHashingService;
@@ -33,7 +33,7 @@ public class UserEditDialogController {
     private Stage dialogStage;
     private User user; // Редактируемый пользователь (null для нового)
     private boolean saveClicked = false;
-    private UserDAO userDao;
+    private UserDao userDao;
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");

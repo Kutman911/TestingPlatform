@@ -24,10 +24,10 @@ public class ManageQuestionsController {
 
     @FXML
     public void initialize() {
-        // Загрузка списка тестов в ComboBox
-        comboTests.setItems(FXCollections.observableArrayList(TestDao.getAllTests()));
+
+        //comboTests.setItems(FXCollections.observableArrayList(TestDao.getAllTests()));
         comboTests.setOnAction(event -> loadQuestions());
-        // Настройка колонок таблицы
+
         colQId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colQText.setCellValueFactory(new PropertyValueFactory<>("text"));
         colQType.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -64,5 +64,8 @@ public class ManageQuestionsController {
             QuestionDao.deleteQuestion(selected.getId());
             loadQuestions();
         }
+    }
+
+    public void setTestContext(Test test) {
     }
 }

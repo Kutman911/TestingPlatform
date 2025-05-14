@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.controller.util.UserContextAware;
 import com.project.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -95,10 +96,11 @@ public class MainFormController {
                             viewPath = "/com/project/view/teacher/ManageTestsView.fxml";
                         } else if (viewTitle.equals("Manage Questions")) {
                             viewPath = "/com/project/view/teacher/ManageQuestionsView.fxml";
+                            System.out.println("Учитель: FXML для 'Manage Questions' еще не создан.");
                         } else if (viewTitle.equals("View Student Submissions")) {
                             viewPath = "/com/project/view/teacher/ViewSubmissionsView.fxml";
+                            System.out.println("Учитель: FXML для 'View Student Submissions' еще не создан.");
                         }
-
                         break;
                     case "ADMIN":
                         if (viewTitle.equals("Manage Users")) {
@@ -107,19 +109,19 @@ public class MainFormController {
 
                             System.out.println("Админ: FXML для 'System Settings' еще не создан.");
                         } else if (viewTitle.equals("View Audit Logs")) {
-                            // viewPath = "/com/project/view/admin/AuditLogsView.fxml";
+                            viewPath = "/com/project/view/admin/AuditLogsView.fxml";
                             System.out.println("Админ: FXML для 'View Audit Logs' еще не создан.");
                         }
 
                         break;
                     case "MANAGER":
                         if (viewTitle.equals("Manage Courses")) {
-                            viewPath = "/com/project/view/manager/ManageCoursesView.fxml"; // Указываем путь
+                            viewPath = "/com/project/view/manager/ManageCoursesView.fxml";
                         } else if (viewTitle.equals("Assign Tests to Courses")) {
-                            // viewPath = "/com/project/view/manager/AssignTestsView.fxml";
+                            viewPath = "/com/project/view/manager/AssignTestsView.fxml";
                             System.out.println("Менеджер: FXML для 'Assign Tests to Courses' еще не создан.");
                         } else if (viewTitle.equals("View Course Analytics")) {
-                            // viewPath = "/com/project/view/manager/ViewCourseAnalytics.fxml";
+                            viewPath = "/com/project/view/manager/ViewCourseAnalytics.fxml";
                             System.out.println("Менеджер: FXML для 'View Course Analytics' еще не создан.");
                         }
                         break;
@@ -143,7 +145,7 @@ public class MainFormController {
             }
             menuBar.getMenus().add(roleSpecificMenu);
         } else if (loggedInUser != null) {
-            System.out.println("Для роли " + loggedInUser.getRole() + " не определены пункты меню в классе User.");
+            System.out.println("For role " + loggedInUser.getRole() + " puncts are not defined in User.");
         }
     }
 
@@ -154,7 +156,7 @@ public class MainFormController {
                 "Username: " + loggedInUser.getUsername() +
                         "\nEmail: " + loggedInUser.getEmail() +
                         "\nRole: " + loggedInUser.getRole());
-        // loadView("/com/project/view/common/UserProfileView.fxml", "User Profile");
+         loadView("/com/project/view/common/UserProfileView.fxml", "User Profile");
     }
 
     @FXML
@@ -195,9 +197,19 @@ public class MainFormController {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent viewRoot = loader.load();
+
+
+            Object loadedController = loader.getController();
+            if (loadedController instanceof UserContextAware) {
+                ((UserContextAware) loadedController).setUserContext(loggedInUser);
+            }
+            // Если контроллеру нужны еще какие-то данные, можно передать их похожим образом
+            // if (loadedController instanceof SomeOtherInterface) {
+            //    ((SomeOtherInterface) loadedController).setSomeData(data);
+            // }
+
             mainPane.setCenter(viewRoot);
             statusLabel.setText("Status: Viewing " + viewTitle);
-
             // Example of initializing controller if it needs the loggedInUser:
             // Object controller = loader.getController();
             // if (controller instanceof NeedsUser) { // Define an interface NeedsUser { void setUser(User user); }
