@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
-
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.project.controller.student.MyResultsController">
-    <center>
-        <Label text="Results View (Not Implemented Yet)">
-            <font>
-                <Font name="System Bold" size="18.0"/>
-            </font>
-        </Label>
-    </center>
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-</BorderPane>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.student.MyResultsController">
+    <children>
+        <TableView fx:id="resultsTable" prefHeight="380.0" prefWidth="580.0">
+            <columns>
+                <TableColumn fx:id="resTitleColumn" text="Title" prefWidth="300.0"/>
+                <TableColumn fx:id="resScoreColumn" text="Score" prefWidth="100.0"/>
+                <TableColumn fx:id="resDateColumn" text="Attempt Date" prefWidth="180.0"/>
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>

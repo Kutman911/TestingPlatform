@@ -45,7 +45,7 @@ public class TestDao {
         }
     }
 
-    // Удаляет тест по id
+
     public static void deleteTest(int id) {
         String sql = "DELETE FROM tests WHERE id = ?";
         try (Connection conn = Database.getConnection();
