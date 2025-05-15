@@ -1,38 +1,51 @@
 package com.project.model;
 
-
-
+import java.time.LocalDateTime;
 
 public class Question {
-    private int id;
+    private int questionId;
     private int testId;
-    private String text;
-    private String type;
+    private String questionText;
+    private String questionType; // "MULTIPLE_CHOICE", "TRUE_FALSE", "SHORT_ANSWER", "ESSAY"
+    private int points;
+    private LocalDateTime createdAt;
 
-    public Question() { }
-
-    public Question(int id, int testId, String text, String type) {
-        this.id = id;
+    // Конструктор для нового вопроса (ID и createdAt будут из БД)
+    public Question(int testId, int id, String questionText, String questionType, int points) {
         this.testId = testId;
-        this.text = text;
-        this.type = type;
+        this.questionText = questionText;
+        this.questionType = questionType;
+        this.points = points;
     }
 
-    public Question(int testId, String text, String type) {
+    // Конструктор для вопроса из БД
+    public Question(int questionId, int testId, String questionText, String questionType, int points, LocalDateTime createdAt) {
+        this.questionId = questionId;
         this.testId = testId;
-        this.text = text;
-        this.type = type;
+        this.questionText = questionText;
+        this.questionType = questionType;
+        this.points = points;
+        this.createdAt = createdAt;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
+    // Getters
+    public int getQuestionId() { return questionId; }
     public int getTestId() { return testId; }
-    public void setTestId(int testId) { this.testId = testId; }
+    public String getQuestionText() { return questionText; }
+    public String getQuestionType() { return questionType; }
+    public int getPoints() { return points; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public String getText() { return text; }
-    public void setText(String text) { this.text = text; }
+    // Setters
+    public void setQuestionId(int questionId) { this.questionId = questionId; }
+    public void setTestId(int testId) { this.testId = testId; } // Обычно не меняется
+    public void setQuestionText(String questionText) { this.questionText = questionText; }
+    public void setQuestionType(String questionType) { this.questionType = questionType; }
+    public void setPoints(int points) { this.points = points; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    @Override
+    public String toString() {
+        return questionText; // Для простоты
+    }
 }

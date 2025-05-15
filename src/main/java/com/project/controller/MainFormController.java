@@ -156,7 +156,7 @@ public class MainFormController {
                 "Username: " + loggedInUser.getUsername() +
                         "\nEmail: " + loggedInUser.getEmail() +
                         "\nRole: " + loggedInUser.getRole());
-         loadView("/com/project/view/common/UserProfileView.fxml", "User Profile");
+        loadView("/com/project/view/common/UserProfileView.fxml", "User Profile");
     }
 
     @FXML

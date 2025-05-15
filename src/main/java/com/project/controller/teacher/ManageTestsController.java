@@ -211,41 +211,46 @@ public class ManageTestsController implements UserContextAware { // Реализ
         // mainFormController.loadView("/com/project/view/teacher/ManageQuestionsView.fxml", "Manage Questions for " + test.getTestName(), test);
         showAlert(Alert.AlertType.INFORMATION, "Manage Questions", "Functionality to manage questions for test '" + test.getTestName() + "' will be implemented here.");
 
-        // Пример как можно было бы передать testId дальше, если бы MainFormController имел такой метод:
-        // ((MainFormController) testsTable.getScene().getRoot().getProperties().get("mainController")).loadQuestionsForTest(test.getTestId());
+        // В ManageTestsController.java -> handleManageQuestions(Test test)
 
-        // Или загружаем новый FXML прямо отсюда, передавая testId
+// ... (существующий код)
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/project/view/teacher/ManageQuestionsView.fxml"));
-            BorderPane questionsView = loader.load();
+            BorderPane questionsView = loader.load(); // Используем BorderPane, т.к. это корневой элемент ManageQuestionsView.fxml
 
-            // Передача testId в ManageQuestionsController
             ManageQuestionsController controller = loader.getController();
-            if (controller instanceof UserContextAware) { // Если он тоже хочет знать пользователя
-                ((UserContextAware) controller).setUserContext(loggedInTeacher);
+            if (controller != null) { // Проверка, что контроллер успешно загружен
+                if (controller instanceof UserContextAware && loggedInTeacher != null) {
+                    ((UserContextAware) controller).setUserContext(loggedInTeacher);
+                }
+                controller.setTestContext(test); // Передаем выбранный тест
+            } else {
+                System.err.println("ManageQuestionsController was not loaded!");
+                showAlert(Alert.AlertType.ERROR, "Internal Error", "Could not initialize question management view controller.");
+                return;
             }
-            controller.setTestContext(test); // Нужен такой метод в ManageQuestionsController
 
-            // Отображение в главном окне (предполагая, что у нас есть доступ к mainPane из MainFormController)
-            // Это более сложный вариант, требующий передачи ссылки на MainFormController или его mainPane.
-            // Проще открыть новое модальное окно или заменить содержимое текущей вкладки, если используется TabPane.
 
-            // Для простоты пока откроем новое окно (хотя лучше интегрировать в mainPane)
+
+            // : Открыть новое модальное окно
             Stage questionsStage = new Stage();
             questionsStage.setTitle("Manage Questions for: " + test.getTestName());
-            questionsStage.initModality(Modality.APPLICATION_MODAL); // или WINDOW_MODAL
-            // questionsStage.initOwner((Stage) testsTable.getScene().getWindow()); // Установить родителя
+            questionsStage.initModality(Modality.WINDOW_MODAL);
+            Stage ownerStage = (Stage) testsTable.getScene().getWindow();
+            if (ownerStage != null) {
+                questionsStage.initOwner(ownerStage);
+            }
             Scene scene = new Scene(questionsView);
             questionsStage.setScene(scene);
             questionsStage.showAndWait();
-            // После закрытия окна управления вопросами, возможно, потребуется обновить информацию о тесте (например, количество вопросов)
-            loadTests();
+
 
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Loading Error", "Could not load the manage questions view.");
+            showAlert(Alert.AlertType.ERROR, "Loading Error", "Could not load the manage questions view: " + e.getMessage());
         }
+
 
 
     }
