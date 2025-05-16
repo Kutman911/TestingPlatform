@@ -88,6 +88,29 @@ public class TestDaoImpl implements TestDao {
     }
 
     @Override
+    public List<Test> findAllActive() throws SQLException {
+        List<Test> tests = new ArrayList<>();
+        // Используем запрос с JOIN'ами, как в findAll, но с фильтром is_active
+        String query = "SELECT t.*, c.course_name, u.username as creator_name " +
+                "FROM tests t " +
+                "LEFT JOIN courses c ON t.course_id = c.course_id " +
+                "JOIN users u ON t.creator_id = u.id " +
+                "WHERE t.is_active = TRUE " + // Добавляем условие
+                "ORDER BY t.test_name ASC";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                tests.add(mapRowToTestWithDetails(rs)); // Используем существующий маппер
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding all active tests: " + e.getMessage());
+            throw e;
+        }
+        return tests;
+    }
+
+    @Override
     public Optional<Test> findById(int testId) throws SQLException {
         String query = "SELECT * FROM tests WHERE test_id = ?";
         try (Connection connection = Database.getConnection();

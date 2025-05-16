@@ -7,7 +7,6 @@ import com.project.dao.TestDao;
 import com.project.dao.TestDaoImpl;
 import com.project.dao.UserDao;
 import com.project.dao.UserDaoImpl;
-import com.project.model.Course;
 import com.project.model.Test;
 import com.project.model.User;
 

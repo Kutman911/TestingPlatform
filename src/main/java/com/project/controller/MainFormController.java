@@ -15,12 +15,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
+
 import java.util.List;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 public class MainFormController {
@@ -88,8 +86,8 @@ public class MainFormController {
                             viewPath = "/com/project/view/student/AvailableTestsView.fxml";
                         } else if (viewTitle.equals("View My Results")) {
                             viewPath = "/com/project/view/student/MyResultsView.fxml";
+                            System.out.println("Студент: FXML для 'My Results' еще не создан.");
                         }
-
                         break;
                     case "TEACHER":
                         if (viewTitle.equals("Create/Manage Tests")) {

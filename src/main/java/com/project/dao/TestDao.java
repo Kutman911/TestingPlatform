@@ -17,6 +17,7 @@ public interface TestDao {
      */
     int save(Test test) throws SQLException;
 
+    List<Test> findAllActive() throws SQLException;
     /**
      * Обновляет существующий тест.
      * @param test объект Test с обновленными данными.

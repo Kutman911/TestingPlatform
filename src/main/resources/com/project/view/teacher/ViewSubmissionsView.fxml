@@ -8,7 +8,7 @@
     <padding>
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
-    <Label text="Просмотр результатов" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <Label text="Checking results" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
     <TableView fx:id="tableSubmissions" prefHeight="200.0">
         <columns>
             <TableColumn fx:id="colStudent" text="Студент" prefWidth="150" />

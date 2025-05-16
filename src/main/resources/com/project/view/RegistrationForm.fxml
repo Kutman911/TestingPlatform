@@ -37,7 +37,7 @@
                 <Font size="16.0" />
             </font>
         </TextField>
-        <PasswordField fx:id="txtConfirmPassword" layoutX="60.0" layoutY="334.0" onAction="#txtConfirmPasswordOnAction" prefHeight="38.0" prefWidth="292.0" promptText="Confirm Password" style="-fx-background-color: black;">
+        <PasswordField fx:id="txtConfirmPassword" layoutX="60.0" layoutY="334.0" onAction="#txtConfirmPasswordOnAction" prefHeight="38.0" prefWidth="292.0" promptText="Confirm Password" style="-fx-background-color: green;">
             <font>
                 <Font size="16.0" />
             </font>
