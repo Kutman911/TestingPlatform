@@ -89,7 +89,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findAll() throws SQLException {
-        String query = "SELECT * FROM users";
+        String query = "SELECT * FROM public.users\n" +
+                "ORDER BY id ASC ";
         List<User> users = new ArrayList<>();
 
         try (Connection connection = Database.getConnection();

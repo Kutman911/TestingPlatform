@@ -201,19 +201,10 @@ public class MainFormController {
             if (loadedController instanceof UserContextAware) {
                 ((UserContextAware) loadedController).setUserContext(loggedInUser);
             }
-            // Если контроллеру нужны еще какие-то данные, можно передать их похожим образом
-            // if (loadedController instanceof SomeOtherInterface) {
-            //    ((SomeOtherInterface) loadedController).setSomeData(data);
-            // }
+
 
             mainPane.setCenter(viewRoot);
             statusLabel.setText("Status: Viewing " + viewTitle);
-            // Example of initializing controller if it needs the loggedInUser:
-            // Object controller = loader.getController();
-            // if (controller instanceof NeedsUser) { // Define an interface NeedsUser { void setUser(User user); }
-            //    ((NeedsUser) controller).setUser(loggedInUser);
-            // }
-
 
         } catch (IOException e) {
             e.printStackTrace();

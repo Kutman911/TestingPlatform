@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects; // Import for Objects.requireNonNull
+import java.util.Objects;
 
 public class AppLauncher extends Application {
     @Override
@@ -17,6 +17,7 @@ public class AppLauncher extends Application {
         Scene scene = new Scene(root);
         stage.setTitle("Online Testing Platform - Login");
         stage.setScene(scene);
+
         stage.show();
     }
 

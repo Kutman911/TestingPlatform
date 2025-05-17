@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="747.0" style="-fx-background-color: #F4F7FB;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.student.TestTakingController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="747.0" style="-fx-background-color: #F4F7FB;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.student.TestTakingController">
     <children>
         <AnchorPane layoutX="200.0" prefHeight="68.0" prefWidth="548.0" style="-fx-background-color: #fff;">
             <effect>
@@ -63,7 +63,7 @@
                 </Text>
                 <Text fx:id="testNameDisplay" fill="#3c3c3c" layoutX="25.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selected Test" textAlignment="CENTER" wrappingWidth="150.0">
                     <font>
-                        <Font name="Panton Black Caps" size="14.0" />
+                        <Font name="Pantone Black Caps" size="14.0" />
                     </font>
                 </Text>
                 <Separator focusTraversable="false" layoutX="14.0" layoutY="165.0" prefHeight="3.0" prefWidth="175.0" style="-fx-background-color: #ccc; -fx-border-style: solid; -fx-border-color: #333;">

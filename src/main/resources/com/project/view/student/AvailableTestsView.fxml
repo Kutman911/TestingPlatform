@@ -11,7 +11,7 @@
 <?import javafx.scene.control.SplitPane?>
 
 <?import javafx.scene.control.ListView?>
-<BorderPane prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.student.AvailableTestsController">
+<BorderPane prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.student.AvailableTestsController">
     <top>
         <Label text="Available Tests" BorderPane.alignment="CENTER">
             <font>

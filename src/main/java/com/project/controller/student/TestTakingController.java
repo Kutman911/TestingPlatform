@@ -20,6 +20,7 @@ public class TestTakingController {
     @FXML
     private ToggleGroup answers;
 
+
     @FXML
     private Text question_text;
 
@@ -40,6 +41,8 @@ public class TestTakingController {
 
     @FXML
     private Label resultLabel;
+
+
 
     private String currentTestName;
     private List<Question> currentQuestions;
@@ -86,10 +89,10 @@ public class TestTakingController {
         if (nowQuestion < currentQuestions.size()) {
             Question currentQ = currentQuestions.get(nowQuestion);
             question_text.setText(currentQ.getQuestion());
-            String[] answers = currentQ.getAnswers();
-            nowCorrectAnswer = answers[answers.length - 1]; // Правильный ответ всегда последний
+            String[] questionAnswers = currentQ.getAnswers();
+            nowCorrectAnswer = questionAnswers[questionAnswers.length - 1];
 
-            List<String> shuffledAnswers = Arrays.asList(Arrays.copyOf(answers, answers.length - 1));
+            List<String> shuffledAnswers = Arrays.asList(Arrays.copyOf(questionAnswers, questionAnswers.length - 1));
             Collections.shuffle(shuffledAnswers);
 
             radio_btn_1.setText(shuffledAnswers.size() > 0 ? shuffledAnswers.get(0) : "");
@@ -98,13 +101,14 @@ public class TestTakingController {
             radio_btn_4.setText(shuffledAnswers.size() > 3 ? shuffledAnswers.get(3) : "");
 
 
-            answers.getSelectedToggle().setSelected(false);
+            if (answers != null && answers.getSelectedToggle() != null) {
+                answers.getSelectedToggle().setSelected(false);
+            }
             resultLabel.setVisible(false);
             answerBtn.setText("Answer");
             answerBtn.setDisable(false);
 
         } else {
-
             question_text.setText("Test completed! You answered " + correctAnswers + " out of " + currentQuestions.size() + " questions correctly.");
             radio_btn_1.setVisible(false);
             radio_btn_2.setVisible(false);
