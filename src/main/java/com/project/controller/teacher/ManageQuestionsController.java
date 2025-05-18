@@ -1,8 +1,8 @@
 package com.project.controller.teacher;
 
 import com.project.dao.QuestionDao;
-import com.project.dao.QuestionDaoImpl; // Предполагаемая реализация
-// import com.project.dao.TestDao; // Не нужен здесь, если тест уже передан
+import com.project.dao.QuestionDaoImpl;
+// import com.project.dao.TestDao;
 // import com.project.dao.TestDaoImpl; // Не нужен здесь
 import com.project.model.Question;
 import com.project.model.Test;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ManageQuestionsController {
     // @FXML private ComboBox<Test> comboTests; // Скорее всего, не нужен
-    @FXML private Label lblTestName; // Для отображения названия текущего теста
+    @FXML private Label lblTestName;
     @FXML private TableView<Question> tableQuestions;
     @FXML private TableColumn<Question, Integer> colQId;
     @FXML private TableColumn<Question, String> colQText;
@@ -29,7 +29,7 @@ public class ManageQuestionsController {
     @FXML private Button btnDeleteQuestion;
     @FXML private Button btnRefreshQuestions; // Добавим кнопку обновления
 
-    private Test currentTest; // Тест, для которого управляем вопросами
+    private Test currentTest;
     private QuestionDao questionDao;
     private ObservableList<Question> questionList;
 
@@ -38,35 +38,32 @@ public class ManageQuestionsController {
         questionDao = new QuestionDaoImpl(); // Создаем экземпляр DAO
         questionList = FXCollections.observableArrayList();
 
-        // comboTests.setOnAction(event -> loadQuestions()); // Удаляем, т.к. тест будет установлен извне
+        // comboTests.setOnAction(event -> loadQuestions());
 
-        colQId.setCellValueFactory(new PropertyValueFactory<>("questionId")); // Убедитесь, что поле называется questionId
-        colQText.setCellValueFactory(new PropertyValueFactory<>("questionText")); // Убедитесь, что поле называется questionText
-        colQType.setCellValueFactory(new PropertyValueFactory<>("questionType")); // Убедитесь, что поле называется questionType
+        colQId.setCellValueFactory(new PropertyValueFactory<>("questionId"));
+        colQText.setCellValueFactory(new PropertyValueFactory<>("questionText"));
+        colQType.setCellValueFactory(new PropertyValueFactory<>("questionType"));
 
         tableQuestions.setItems(questionList);
 
         // Заполняем ComboBox для типов вопросов
         comboQuestionType.setItems(FXCollections.observableArrayList(
-                "MULTIPLE_CHOICE", "TRUE_FALSE", "SHORT_ANSWER", "ESSAY" // Соответствует CHECK в БД
+                "MULTIPLE_CHOICE", "TRUE_FALSE", "SHORT_ANSWER", "ESSAY"
         ));
         comboQuestionType.setValue("MULTIPLE_CHOICE"); // Тип по умолчанию
     }
 
-    /**
-     * Устанавливает текущий тест и загружает его вопросы.
-     * Этот метод должен вызываться из ManageTestsController.
-     */
+
     public void setTestContext(Test test) {
         this.currentTest = test;
         if (currentTest != null) {
             lblTestName.setText("Managing Questions for: " + currentTest.getTestName());
-            // comboTests.setValue(currentTest); // Если бы ComboBox остался и был для отображения
-            // comboTests.setDisable(true);      // и был бы заблокирован
+            // comboTests.setValue(currentTest);
+            // comboTests.setDisable(true);
             loadQuestions();
         } else {
             lblTestName.setText("No test selected.");
-            questionList.clear(); // Очищаем таблицу, если тест не выбран
+            questionList.clear();
         }
     }
 
@@ -104,15 +101,12 @@ public class ManageQuestionsController {
             return;
         }
 
-        // ID вопроса будет сгенерирован БД. Передаем 0 или null.
-        // Предполагаем, что Question model и DAO готовы к этому.
-        // Для простоты, пока не добавляем баллы (points) при создании.
-        Question newQuestion = new Question(0, currentTest.getTestId(), text, type, 1); // ID 0, points 1 по умолчанию
+        Question newQuestion = new Question(0, currentTest.getTestId(), text, type, 1);
         try {
             questionDao.addQuestion(newQuestion);
-            loadQuestions(); // обновляем список
+            loadQuestions();
             txtQuestionText.clear();
-            // comboQuestionType.setValue("MULTIPLE_CHOICE"); // Оставляем выбранный тип или сбрасываем
+            // comboQuestionType.setValue("MULTIPLE_CHOICE");
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to add question: " + e.getMessage());

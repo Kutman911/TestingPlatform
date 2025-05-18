@@ -99,7 +99,6 @@ public class CourseEditDialogController {
         if (courseNameField.getText() == null || courseNameField.getText().trim().isEmpty()) {
             errorMessage += "Course name cannot be empty!\n";
         }
-        // Description может быть пустым, если это допустимо
 
         if (errorMessage.isEmpty()) {
             return true;

@@ -10,4 +10,12 @@ public interface QuestionDao {
     boolean deleteQuestion(int questionId) throws SQLException;
     List<Question> getQuestionsByTestId(int testId) throws SQLException;
     // Optional<Question> findById(int questionId) throws SQLException; // Если нужно
+    /**
+     * Возвращает общее количество баллов за все вопросы определенного теста.
+     *
+     * @param testId ID теста.
+     * @return Общее количество баллов.
+     * @throws SQLException Если произошла ошибка при доступе к БД.
+     */
+    int getTotalPointsForTest(int testId) throws SQLException;
 }

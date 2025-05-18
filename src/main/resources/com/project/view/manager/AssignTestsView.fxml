@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+
+<?import javafx.scene.layout.HBox?>
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.project.controller.manager.AssignTestsController">
-    <center>
-        <Label text="(Not Implemented Yet)">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <Label layoutX="20.0" layoutY="10.0" text="Assign Tests to Courses">
             <font>
-                <Font name="System Bold" size="18.0"/>
+                <Font size="24.0" />
             </font>
         </Label>
-    </center>
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-</BorderPane>
+
+        <TableView fx:id="testsTable" layoutX="20.0" layoutY="50.0" prefHeight="480.0" prefWidth="760.0" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
+            <columns>
+                <TableColumn fx:id="testIdColumn" text="ID" prefWidth="50.0" />
+                <TableColumn fx:id="testNameColumn" text="Test Name" prefWidth="250.0" />
+                <TableColumn fx:id="courseNameColumn" text="Assigned Course" prefWidth="180.0" />
+                <TableColumn fx:id="durationColumn" text="Duration" prefWidth="80.0" />
+                <TableColumn fx:id="activeColumn" text="Active" prefWidth="80.0" />
+                <TableColumn fx:id="creatorNameColumn" text="Created By" prefWidth="150.0" />
+            </columns>
+        </TableView>
+
+        <HBox layoutX="20.0" layoutY="550.0" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0">
+            <children>
+                <Button fx:id="btnEditAssignment" text="Edit Assignment" onAction="#handleEditAssignment"/>
+                <Button fx:id="btnRefresh" text="Refresh" onAction="#handleRefresh"/>
+            </children>
+        </HBox>
+
+    </children>
+</AnchorPane>

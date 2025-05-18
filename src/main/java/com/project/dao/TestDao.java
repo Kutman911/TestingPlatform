@@ -1,6 +1,8 @@
 package com.project.dao;
 
 import com.project.model.Test;
+import com.project.model.TestAttempt;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -64,4 +66,5 @@ public interface TestDao {
      * @throws SQLException если возникает ошибка доступа к базе данных.
      */
     List<Test> findByCourseId(int courseId) throws SQLException;
+
 }

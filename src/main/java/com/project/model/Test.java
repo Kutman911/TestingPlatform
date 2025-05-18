@@ -59,7 +59,7 @@ public class Test {
 
     public void setTestId(int testId) { this.testId = testId; }
     public void setCourseId(Integer courseId) { this.courseId = courseId; }
-    public void setCreatorId(int creatorId) { this.creatorId = creatorId; } // Обычно не меняется после создания
+    public void setCreatorId(int creatorId) { this.creatorId = creatorId; }
     public void setTestName(String testName) { this.testName = testName; }
     public void setDescription(String description) { this.description = description; }
     public void setDurationMinutes(int durationMinutes) { this.durationMinutes = durationMinutes; }

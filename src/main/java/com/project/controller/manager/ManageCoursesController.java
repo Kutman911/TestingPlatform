@@ -31,7 +31,7 @@ public class ManageCoursesController {
     private TableColumn<Course, String> nameColumn;
     @FXML
     private TableColumn<Course, String> descriptionColumn;
-    // Раскомментируйте, если добавили колонки дат в FXML
+
     // @FXML private TableColumn<Course, LocalDateTime> createdAtColumn;
     // @FXML private TableColumn<Course, LocalDateTime> updatedAtColumn;
 
@@ -46,9 +46,7 @@ public class ManageCoursesController {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("courseId"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("courseName"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        // Раскомментируйте для дат
-        // createdAtColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
-        // updatedAtColumn.setCellValueFactory(new PropertyValueFactory<>("updatedAt"));
+
 
         coursesTable.setItems(courseList);
         loadCourses();
@@ -72,7 +70,7 @@ public class ManageCoursesController {
 
     @FXML
     void handleAddCourse(ActionEvent event) {
-        showCourseEditDialog(null); // null для нового курса
+        showCourseEditDialog(null);
     }
 
     @FXML
@@ -129,7 +127,7 @@ public class ManageCoursesController {
             Stage dialogStage = new Stage();
             dialogStage.setTitle(course == null ? "Add New Course" : "Edit Course");
             dialogStage.initModality(Modality.WINDOW_MODAL);
-            // Stage primaryStage = (Stage) coursesTable.getScene().getWindow(); // Опционально, для установки родителя
+            // Stage primaryStage = (Stage) coursesTable.getScene().getWindow();
             // dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(dialogPane);
             dialogStage.setScene(scene);
@@ -141,7 +139,7 @@ public class ManageCoursesController {
             dialogStage.showAndWait();
 
             if (controller.isSaveClicked()) {
-                loadCourses(); // Обновить таблицу, если сохранили
+                loadCourses();
             }
             return controller.isSaveClicked();
 

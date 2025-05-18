@@ -51,17 +51,16 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPasswordHash());
-            // Use getRole() from the User object, which is set by subclasses
             preparedStatement.setString(4, user.getRole().toUpperCase());
 
-            return preparedStatement.executeUpdate() > 0; // Return true if successful
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error occurred while saving the user: " + e.getMessage());
             throw e;
         }
     }
 
-    // Retrieve user by ID
+
     @Override
     public Optional<User> findById(int id) throws SQLException {
         String query = "SELECT * FROM users WHERE id = ?";
@@ -113,7 +112,7 @@ public class UserDaoImpl implements UserDao {
         return users;
     }
 
-    // Update user information
+
     @Override
     public boolean update(User user) throws SQLException {
         String query = "UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?";
@@ -132,7 +131,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    // Update password for a specific user
+
     @Override
     public boolean updatePassword(int userId, String newPasswordHash) throws SQLException {
         String query = "UPDATE users SET password = ? WHERE id = ?";

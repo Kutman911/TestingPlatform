@@ -44,7 +44,6 @@ public class TestEditDialogController {
         testDao = new TestDaoImpl();
         courseObservableList = FXCollections.observableArrayList();
 
-        // Настройка ComboBox для отображения имен курсов, но хранения объектов Course
         courseComboBox.setConverter(new StringConverter<Course>() {
             @Override
             public String toString(Course course) {
@@ -53,7 +52,6 @@ public class TestEditDialogController {
 
             @Override
             public Course fromString(String string) {
-                // Этот метод не будет использоваться для выбора, т.к. мы работаем с объектами
                 return courseObservableList.stream()
                         .filter(c -> c != null && c.getCourseName().equals(string))
                         .findFirst()
@@ -95,13 +93,12 @@ public class TestEditDialogController {
             } else {
                 courseComboBox.setValue(null); // Выбираем "No Course"
             }
-        } else { // Режим добавления
+        } else {
             testNameField.clear();
             descriptionArea.clear();
-            // Значения по умолчанию для Spinner и CheckBox уже установлены в FXML или их можно установить здесь
-            durationSpinner.getValueFactory().setValue(60); // Значение по умолчанию
+            durationSpinner.getValueFactory().setValue(60);
             activeCheckBox.setSelected(true);
-            courseComboBox.setValue(null); // "No Course" по умолчанию
+            courseComboBox.setValue(null);
         }
     }
 
@@ -120,16 +117,15 @@ public class TestEditDialogController {
             boolean isActive = activeCheckBox.isSelected();
 
             try {
-                if (test == null) { // Новый тест
+                if (test == null) {
                     Test newTest = new Test(courseId, loggedInTeacherId, testName, description, duration, isActive);
                     testDao.save(newTest);
-                } else { // Обновление существующего теста
+                } else {
                     test.setTestName(testName);
                     test.setDescription(description);
                     test.setCourseId(courseId);
                     test.setDurationMinutes(duration);
                     test.setActive(isActive);
-                    // creatorId не меняем при редактировании
                     testDao.update(test);
                 }
                 saveClicked = true;

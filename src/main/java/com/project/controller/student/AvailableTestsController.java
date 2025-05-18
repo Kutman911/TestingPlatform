@@ -1,6 +1,12 @@
 package com.project.controller.student;
 
 import com.project.controller.util.UserContextAware;
+import com.project.dao.QuestionDao;
+import com.project.dao.QuestionDaoImpl;
+import com.project.dao.TestDao;
+import com.project.dao.TestDaoImpl;
+import com.project.model.Question;
+import com.project.model.Test;
 import com.project.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,19 +20,21 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class AvailableTestsController implements UserContextAware {
 
     @FXML
-    private TableView<TestInfo> availableTestsTable;
+    private TableView<Test> availableTestsTable;
     @FXML
-    private TableColumn<TestInfo, String> testNameColumn;
+    private TableColumn<Test, String> testNameColumn;
     @FXML
-    private TableColumn<TestInfo, String> courseNameColumn;
+    private TableColumn<Test, String> courseNameColumn;
     @FXML
-    private TableColumn<TestInfo, Integer> durationColumn;
+    private TableColumn<Test, Integer> durationColumn;
 
     @FXML
     private Label selectedTestNameLabel;
@@ -34,9 +42,10 @@ public class AvailableTestsController implements UserContextAware {
     private ListView<String> questionsListView;
     @FXML
     private Button btnStartTest;
-
+    private TestDao testDao;
     private User loggedInStudent;
-    private ObservableList<TestInfo> availableTestList;
+    private QuestionDao questionDao;
+    private ObservableList<Test> availableTestList;
     private ObservableList<String> questionsForSelectedTestList;
 
     @Override
@@ -50,73 +59,42 @@ public class AvailableTestsController implements UserContextAware {
     public void initialize() {
         availableTestList = FXCollections.observableArrayList();
         questionsForSelectedTestList = FXCollections.observableArrayList();
+        testDao = new TestDaoImpl();
 
         testNameColumn.setCellValueFactory(new PropertyValueFactory<>("testName"));
         courseNameColumn.setCellValueFactory(new PropertyValueFactory<>("courseName"));
         durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
+
+        questionDao = new QuestionDaoImpl();
+
         availableTestsTable.setItems(availableTestList);
         questionsListView.setItems(questionsForSelectedTestList);
-
-        // Добавляем тестовые данные
-        availableTestList.addAll(
-                new TestInfo("Java Basics", "Programming", 30),
-                new TestInfo("English Grammar", "Language Arts", 45),
-                new TestInfo("Math Challenge", "Mathematics", 60)
-        );
-
-        // Слушатель для выбора теста в таблице
         availableTestsTable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showTestDetails(newValue)
         );
 
-        // Изначально кнопка "Start Test" должна быть неактивна
+        loadAvailableTests();
+
         btnStartTest.setDisable(true);
     }
 
-    private void showTestDetails(TestInfo testInfo) {
-        if (testInfo != null) {
-            selectedTestNameLabel.setText("Selected Test: " + testInfo.getTestName());
-            btnStartTest.setDisable(false);
-            // В этом упрощенном варианте мы не будем отображать список вопросов здесь
-            questionsForSelectedTestList.clear();
-            if (testInfo.getTestName().equals("Java Basics")) {
-                questionsForSelectedTestList.addAll("Question 1 (Java)", "Question 2 (Java)", "Question 3 (Java)");
-            } else if (testInfo.getTestName().equals("English Grammar")) {
-                questionsForSelectedTestList.addAll("Question 1 (English)", "Question 2 (English)", "Question 3 (English)");
-            } else if (testInfo.getTestName().equals("Math Challenge")) {
-                questionsForSelectedTestList.addAll("Question 1 (Math)", "Question 2 (Math)", "Question 3 (Math)");
-            }
-        } else {
-            selectedTestNameLabel.setText("Selected Test: None");
-            btnStartTest.setDisable(true);
-            questionsForSelectedTestList.clear();
+    private void loadAvailableTests() {
+        try {
+
+            List<Test> testsFromDb = testDao.findAllActive();
+
+
+            availableTestList.setAll(testsFromDb);
+            System.out.println("Loaded " + testsFromDb.size() + " active tests from DB.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            showAlert(Alert.AlertType.ERROR, "Database error", "Failed to load the list of available tests : " + e.getMessage());
         }
     }
 
-    @FXML
-    void handleStartOrViewTest(ActionEvent event) {
-        TestInfo selectedTest = availableTestsTable.getSelectionModel().getSelectedItem();
-        if (selectedTest != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/project/view/student/TestTakingView.fxml"));
-                Parent testTakingRoot = loader.load();
-
-                TestTakingController controller = loader.getController();
-                controller.setCurrentTest(selectedTest.getTestName());
-
-                Scene scene = new Scene(testTakingRoot);
-                Stage stage = (Stage) btnStartTest.getScene().getWindow();
-                stage.setScene(scene);
-                stage.setTitle(selectedTest.getTestName());
-                stage.show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Navigation Error", "Could not load test taking view: " + e.getMessage());
-            }
-        }
-    }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
@@ -125,29 +103,79 @@ public class AvailableTestsController implements UserContextAware {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    private void showTestDetails(Test test) {
+        questionsForSelectedTestList.clear();
 
-    // Вспомогательный класс для хранения информации о тесте
-    public static class TestInfo {
-        private String testName;
-        private String courseName;
-        private int duration;
+        if (test != null) {
+            selectedTestNameLabel.setText("Selected Test: " + test.getTestName());
+            btnStartTest.setDisable(false);
 
-        public TestInfo(String testName, String courseName, int duration) {
-            this.testName = testName;
-            this.courseName = courseName;
-            this.duration = duration;
-        }
+            try {
+                List<Question> questions = questionDao.getQuestionsByTestId(test.getTestId());
 
-        public String getTestName() {
-            return testName;
-        }
+                if (questions != null && !questions.isEmpty()) {
+                    for (Question q : questions) {
+                        String questionText = q.getQuestionText();
+                        if (questionText.length() > 100) { // Пример: ограничить 100 символами
+                            questionText = questionText.substring(0, 100) + "...";
+                        }
+                        questionsForSelectedTestList.add(questionText);
+                    }
+                    System.out.println("Loaded " + questions.size() + " questions details for test ID: " + test.getTestId());
+                } else {
+                    // Если у теста нет вопросов
+                    questionsForSelectedTestList.add("No questions defined for this test.");
+                    System.out.println("No questions found for test ID: " + test.getTestId());
+                }
 
-        public String getCourseName() {
-            return courseName;
-        }
+            } catch (SQLException e) {
+                e.printStackTrace();
 
-        public int getDuration() {
-            return duration;
+                System.err.println("Failed to load question details for test ID " + test.getTestId() + ": " + e.getMessage());
+                questionsForSelectedTestList.add("Error loading questions.");
+            }
+
+
+        } else {
+            selectedTestNameLabel.setText("Selected Test: None");
+            btnStartTest.setDisable(true);
         }
     }
+
+    @FXML
+    void handleStartOrViewTest(ActionEvent event) {
+        Test selectedTest = availableTestsTable.getSelectionModel().getSelectedItem();
+        if (selectedTest != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/project/view/student/TestTakingView.fxml"));
+                Parent testTakingRoot = loader.load();
+
+                TestTakingController controller = loader.getController();
+                controller.setCurrentTest(selectedTest);
+
+                if (controller instanceof UserContextAware && loggedInStudent != null) {
+                    ((UserContextAware) controller).setUserContext(loggedInStudent);
+                } else if (loggedInStudent == null) {
+                    System.err.println("Error: loggedInStudent is null when starting test.");
+                }
+
+                Scene scene = new Scene(testTakingRoot);
+                Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                stage.setScene(scene);
+                stage.setTitle("Doing test: " + selectedTest.getTestName());
+                stage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Navigation Error", "Could not load test taking view: " + e.getMessage());
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                System.err.println("Error casting event source to Button in handleStartOrViewTest.");
+                showAlert(Alert.AlertType.ERROR, "Internal Error", "Could not get window to start test.");
+            }
+        } else {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a test to start.");
+        }
+    }
+
 }

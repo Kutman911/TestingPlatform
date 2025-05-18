@@ -31,7 +31,7 @@ public class UserEditDialogController {
     private Button saveButton;
 
     private Stage dialogStage;
-    private User user; // Редактируемый пользователь (null для нового)
+    private User user;
     private boolean saveClicked = false;
     private UserDao userDao;
 
@@ -87,11 +87,6 @@ public class UserEditDialogController {
                         showAlert(Alert.AlertType.ERROR, "Validation Error", "Username already exists.");
                         return;
                     }
-                    // Дополнительная проверка на уникальность email, если требуется
-                    // if (userDao.findByEmail(email).isPresent()) { // Предполагая, что такой метод есть
-                    //     showAlert(Alert.AlertType.ERROR, "Validation Error", "Email already exists.");
-                    //     return;
-                    // }
 
                     String plainPassword = passwordField.getText();
                     String hashedPassword = PasswordHashingService.hashPassword(plainPassword);
@@ -99,8 +94,7 @@ public class UserEditDialogController {
                     User newUser = createUserByRole(0, username, email, selectedRole, hashedPassword);
                     userDao.save(newUser);
 
-                } else { // Обновление существующего пользователя
-                    // Проверка, если имя пользователя было изменено и новое имя уже занято
+                } else {
                     if (!user.getUsername().equals(username) && userDao.findByUsername(username).isPresent()) {
                         showAlert(Alert.AlertType.ERROR, "Validation Error", "New username already exists.");
                         return;
@@ -142,7 +136,7 @@ public class UserEditDialogController {
             errorMessage += "No role selected!\n";
         }
 
-        if (user == null) { // При создании нового пользователя пароль обязателен
+        if (user == null) {
             if (passwordField.getText() == null || passwordField.getText().isEmpty()) {
                 errorMessage += "Password cannot be empty for new user!\n";
             } else if (passwordField.getText().length() < 8) {
@@ -168,9 +162,9 @@ public class UserEditDialogController {
                 return new Admin(id, username, email, passwordHash);
             case "MANAGER":
                 return new Manager(id, username, email, passwordHash);
-            default: // По умолчанию создаем Student или выбрасываем исключение
+            default:
                 System.err.println("Unknown role in createUserByRole: " + role + ". Defaulting to Student.");
-                return new Student(id, username, email, passwordHash); // Или throw new IllegalArgumentException("Invalid role: " + role);
+                return new Student(id, username, email, passwordHash);
         }
     }
 

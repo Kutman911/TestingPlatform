@@ -205,24 +205,23 @@ public class ManageTestsController implements UserContextAware { // Реализ
     private void handleManageQuestions(Test test) {
         if (test == null) return;
         System.out.println("Manage Questions clicked for test: " + test.getTestName() + " (ID: " + test.getTestId() + ")");
-        // Здесь будет логика для перехода к окну управления вопросами для test.getTestId()
-        // Например, загрузка нового FXML в центр MainForm или открытие нового окна.
+
         // mainFormController.loadView("/com/project/view/teacher/ManageQuestionsView.fxml", "Manage Questions for " + test.getTestName(), test);
         showAlert(Alert.AlertType.INFORMATION, "Manage Questions", "Functionality to manage questions for test '" + test.getTestName() + "' will be implemented here.");
 
         // В ManageTestsController.java -> handleManageQuestions(Test test)
 
-// ... (существующий код)
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/project/view/teacher/ManageQuestionsView.fxml"));
-            BorderPane questionsView = loader.load(); // Используем BorderPane, т.к. это корневой элемент ManageQuestionsView.fxml
+            BorderPane questionsView = loader.load();
 
             ManageQuestionsController controller = loader.getController();
-            if (controller != null) { // Проверка, что контроллер успешно загружен
+            if (controller != null) {
                 if (controller instanceof UserContextAware && loggedInTeacher != null) {
                     ((UserContextAware) controller).setUserContext(loggedInTeacher);
                 }
-                controller.setTestContext(test); // Передаем выбранный тест
+                controller.setTestContext(test);
             } else {
                 System.err.println("ManageQuestionsController was not loaded!");
                 showAlert(Alert.AlertType.ERROR, "Internal Error", "Could not initialize question management view controller.");
@@ -250,8 +249,6 @@ public class ManageTestsController implements UserContextAware { // Реализ
             showAlert(Alert.AlertType.ERROR, "Loading Error", "Could not load the manage questions view: " + e.getMessage());
         }
 
-
-
     }
 
 
@@ -269,9 +266,9 @@ public class ManageTestsController implements UserContextAware { // Реализ
 
             TestEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            controller.setLoggedInTeacherId(creatorId); // Передаем ID учителя
-            controller.setCourses(courseDao.findAll()); // Передаем список курсов для ComboBox
-            controller.setTest(test); // null для нового теста
+            controller.setLoggedInTeacherId(creatorId);
+            controller.setCourses(courseDao.findAll());
+            controller.setTest(test);
 
             dialogStage.showAndWait();
 
@@ -280,7 +277,7 @@ public class ManageTestsController implements UserContextAware { // Реализ
             }
             return controller.isSaveClicked();
 
-        } catch (IOException | SQLException e) { // SQLException из-за courseDao.findAll()
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to open test edit dialog: " + e.getMessage());
             return false;

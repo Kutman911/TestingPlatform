@@ -34,20 +34,18 @@ public class MainFormController {
     @FXML
     private Label statusLabel;
 
-    private User loggedInUser; // Store the full User object
+    private User loggedInUser;
 
     public void initialize() {
         statusLabel.setText("Status: Initializing...");
     }
 
-    // Changed to accept User object
     public void initializeUser(User user) {
         this.loggedInUser = user;
 
         if (loggedInUser == null) {
-            // Handle error: no user passed or user is null
             showAlert(Alert.AlertType.ERROR, "Initialization Error", "User data not available. Logging out.");
-            handleLogout(null); // Pass null or create a dummy ActionEvent
+            handleLogout(null);
             return;
         }
 
@@ -55,7 +53,6 @@ public class MainFormController {
         roleLabel.setText("Your Role: " + loggedInUser.getRole());
         statusLabel.setText("Status: Logged in as " + loggedInUser.getRole());
 
-        // Clear existing dynamic menus before adding new ones (if any were there)
         menuBar.getMenus().removeIf(menu -> menu.getId() != null && menu.getId().startsWith("roleSpecificMenu_"));
 
         setupMenusBasedOnRole();
@@ -86,7 +83,6 @@ public class MainFormController {
                             viewPath = "/com/project/view/student/AvailableTestsView.fxml";
                         } else if (viewTitle.equals("View My Results")) {
                             viewPath = "/com/project/view/student/MyResultsView.fxml";
-                            System.out.println("Студент: FXML для 'My Results' еще не создан.");
                         }
                         break;
                     case "TEACHER":
@@ -94,7 +90,6 @@ public class MainFormController {
                             viewPath = "/com/project/view/teacher/ManageTestsView.fxml";
                         } else if (viewTitle.equals("Manage Questions")) {
                             viewPath = "/com/project/view/teacher/ManageQuestionsView.fxml";
-                            System.out.println("Учитель: FXML для 'Manage Questions' еще не создан.");
                         } else if (viewTitle.equals("View Student Submissions")) {
                             viewPath = "/com/project/view/teacher/ViewSubmissionsView.fxml";
                             System.out.println("Учитель: FXML для 'View Student Submissions' еще не создан.");
@@ -117,14 +112,13 @@ public class MainFormController {
                             viewPath = "/com/project/view/manager/ManageCoursesView.fxml";
                         } else if (viewTitle.equals("Assign Tests to Courses")) {
                             viewPath = "/com/project/view/manager/AssignTestsView.fxml";
-                            System.out.println("Менеджер: FXML для 'Assign Tests to Courses' еще не создан.");
+                            System.out.println("Менеджер: FXML для 'Assign Tests to Courses' не нужен.");
                         } else if (viewTitle.equals("View Course Analytics")) {
                             viewPath = "/com/project/view/manager/ViewCourseAnalytics.fxml";
-                            System.out.println("Менеджер: FXML для 'View Course Analytics' еще не создан.");
                         }
                         break;
                     default:
-                        System.err.println("Неизвестная роль при настройке меню: " + loggedInUser.getRole());
+                        System.err.println("Unknown role: " + loggedInUser.getRole());
                         break;
                 }
 
@@ -158,7 +152,7 @@ public class MainFormController {
     }
 
     @FXML
-    private void handleLogout(ActionEvent event) {
+    public void handleLogout(ActionEvent event) {
         loggedInUser = null; // Clear user session
         try {
             Parent loginRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/project/view/LoginForm.fxml")));

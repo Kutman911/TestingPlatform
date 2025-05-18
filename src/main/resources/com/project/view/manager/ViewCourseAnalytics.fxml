@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
-
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.project.controller.manager.ViewCourseAnalyticsController">
-    <center>
-        <Label text="Available Tests View (Not Implemented Yet)">
+<?import javafx.scene.layout.VBox?> <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.controller.manager.ViewCourseAnalyticsController">
+    <children>
+        <Label layoutX="300.0" layoutY="20.0" text="Course Analytics">
             <font>
-                <Font name="System Bold" size="18.0"/>
+                <Font size="24.0" />
             </font>
         </Label>
-    </center>
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-</BorderPane>
+
+        <Label layoutX="50.0" layoutY="70.0" text="Select Course:"/>
+        <ComboBox fx:id="courseComboBox" layoutX="150.0" layoutY="65.0" prefWidth="300.0"/>
+
+        <Label fx:id="selectedCourseNameLabel" layoutX="50.0" layoutY="110.0" text="Selected Course: None">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Label>
+
+
+        <TableView fx:id="testsAnalyticsTable" layoutX="50.0" layoutY="150.0" prefHeight="400.0" prefWidth="700.0">
+            <columns>
+                <TableColumn fx:id="testNameColumn" text="Test Name" prefWidth="350.0"/>
+                <TableColumn fx:id="averageScorePercentageColumn" text="Average Score (%)" prefWidth="150.0"/>
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>
