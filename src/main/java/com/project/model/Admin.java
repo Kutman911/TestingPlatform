@@ -27,7 +27,6 @@ public class Admin extends User {
 
 
         items.add(manageUsers);
-        items.add(systemSettings);
         return items;
     }
 }

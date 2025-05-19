@@ -16,10 +16,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
@@ -31,18 +38,12 @@ public class AssignTestsController implements Initializable, UserContextAware {
 
     @FXML
     private TableView<Test> testsTable;
-    @FXML
-    private TableColumn<Test, Integer> testIdColumn;
-    @FXML
-    private TableColumn<Test, String> testNameColumn;
-    @FXML
-    private TableColumn<Test, String> courseNameColumn;
-    @FXML
-    private TableColumn<Test, Integer> durationColumn;
-    @FXML
-    private TableColumn<Test, Boolean> activeColumn;
-    @FXML
-    private TableColumn<Test, String> creatorNameColumn;
+    @FXML private TableColumn<Test, Integer> testIdColumn;
+    @FXML private TableColumn<Test, String> testNameColumn;
+    @FXML private TableColumn<Test, String> courseNameColumn;
+    @FXML private TableColumn<Test, Integer> durationColumn;
+    @FXML private TableColumn<Test, Boolean> activeColumn;
+    @FXML private TableColumn<Test, String> creatorNameColumn;
 
     @FXML
     private Button btnEditAssignment;
@@ -55,6 +56,7 @@ public class AssignTestsController implements Initializable, UserContextAware {
 
     private ObservableList<Test> testList;
     private User loggedInManager;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -115,12 +117,52 @@ public class AssignTestsController implements Initializable, UserContextAware {
         loadTests();
     }
 
-    @FXML
     private void handleEditAssignment(ActionEvent event) {
         Test selectedTest = testsTable.getSelectionModel().getSelectedItem();
         if (selectedTest != null) {
-            System.out.println("Edit Assignment clicked for test: " + selectedTest.getTestName() + " (ID: " + selectedTest.getTestId() + ")");
-            showAlert(Alert.AlertType.INFORMATION, "Edit Assignment", "Функционал редактирования назначения теста будет реализован здесь.");
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/com/project/view/manager/AssignmentEditDialog.fxml"));
+                GridPane dialogPane = loader.load();
+
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("Edit Test Assignment: " + selectedTest.getTestName());
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+
+                Stage ownerStage = (Stage) testsTable.getScene().getWindow();
+                if (ownerStage != null) {
+                    dialogStage.initOwner(ownerStage);
+                }
+
+                Scene scene = new Scene(dialogPane);
+                dialogStage.setScene(scene);
+
+                AssignmentEditDialogController controller = loader.getController();
+                controller.setDialogStage(dialogStage);
+                controller.setTest(selectedTest);
+                controller.setCourses(courseDao.findAll());
+
+                dialogStage.showAndWait();
+
+                if (controller.isSaveClicked()) {
+                    loadTests();
+                    showAlert(Alert.AlertType.INFORMATION, "Save Successful", "Test assignment updated.");
+                } else {
+                    System.out.println("Assignment edit cancelled.");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Loading Error", "Could not load the assignment edit dialog: " + e.getMessage());
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to load courses for assignment dialog: " + e.getMessage());
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                System.err.println("Error casting FXML root or stage owner in handleEditAssignment.");
+                showAlert(Alert.AlertType.ERROR, "Internal Error", "Could not set up assignment edit dialog.");
+            }
+
         } else {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a test to edit assignment.");
         }

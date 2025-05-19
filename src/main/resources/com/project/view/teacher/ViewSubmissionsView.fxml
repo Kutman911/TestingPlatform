@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" spacing="10"
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" spacing="10"
       fx:controller="com.project.controller.teacher.ViewSubmissionsController">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
-    <Label text="Checking results" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-    <TableView fx:id="tableSubmissions" prefHeight="200.0">
-        <columns>
-            <TableColumn fx:id="colStudent" text="Студент" prefWidth="150" />
-            <TableColumn fx:id="colTest" text="Тест" prefWidth="200" />
-            <TableColumn fx:id="colScore" text="Оценка" prefWidth="100" />
-            <TableColumn fx:id="colStatus" text="Статус" prefWidth="100" />
-        </columns>
+    <Label text="Student Submissions"> <font>
+        <Font size="18.0" />
+    </font>
+    </Label>
+    <TableView fx:id="tableSubmissions" prefHeight="400.0" prefWidth="600.0" VBox.vgrow="ALWAYS"> <columns>
+        <TableColumn fx:id="colStudent" text="Student" prefWidth="180.0" />
+        <TableColumn fx:id="colTest" text="Test" prefWidth="220.0" />
+        <TableColumn fx:id="colScore" text="Score (Obtained / Max)" prefWidth="150.0" /> </columns>
+        <placeholder>
+            <Label text="No submissions to display."/>
+        </placeholder>
     </TableView>
+
 </VBox>

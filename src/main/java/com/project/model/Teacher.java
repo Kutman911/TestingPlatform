@@ -24,8 +24,12 @@ public class Teacher extends User {
         MenuItem manageQuestions = new MenuItem("Manage Questions");
         manageQuestions.setOnAction(e -> System.out.println("Teacher: Navigating to Manage Questions..."));
 
+        MenuItem viewSubmissions = new MenuItem("View Student Submissions");
+        viewSubmissions.setOnAction(e -> System.out.println("Teacher: Navigating to View Submissions..."));
+
         items.add(createTest);
         items.add(manageQuestions);
+        items.add(viewSubmissions);
         return items;
     }
 }
